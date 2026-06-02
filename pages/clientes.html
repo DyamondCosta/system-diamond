@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <h2>🛞 Batalhão</h2>
+
+        <a href="../index.html">Dashboard</a>
+        <a href="clientes.html">Clientes</a>
+        <a href="pneus.html">Pneus</a>
+
+    </div>
+
+    <div class="main">
+
+        <div class="header">
+            <h1>CLIENTES</h1>
+        </div>
+
+        <div class="container">
+
+            <h2>Novo Cliente</h2>
+
+            <input
+                id="nome"
+                type="text"
+                placeholder="Nome">
+
+            <br><br>
+
+            <input
+                id="telefone"
+                type="text"
+                placeholder="Telefone">
+
+            <br><br>
+
+            <input
+                id="placa"
+                type="text"
+                placeholder="Placa">
+
+            <br><br>
+
+            <textarea
+                id="observacao"
+                placeholder="Observação"></textarea>
+
+            <br><br>
+
+            <button onclick="salvarCliente()">
+                Salvar Cliente
+            </button>
+
+            <hr>
+
+            <h2>Clientes Cadastrados</h2>
+
+            <input
+                id="pesquisa"
+                type="text"
+                placeholder="Pesquisar cliente"
+                onkeyup="filtrarClientes()">
+
+            <br><br>
+
+            <div id="lista-clientes"></div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/clientes.js"></script>
+
+</body>
+
+</html>

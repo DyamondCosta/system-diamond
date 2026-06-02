@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalhão dos Pneus</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <h2>🛞 Batalhão</h2>
+
+        <p id="usuario-logado"></p>
+
+        <a href="index.html">Dashboard</a>
+        <a href="pages/clientes.html">Clientes</a>
+        <a href="pages/pneus.html">Pneus</a>
+        <a href="pages/servicos.html">Serviços</a>
+        <a href="pages/vendas.html">Vendas</a>
+
+        <a
+            href="pages/caixa.html"
+            id="menu-caixa">
+            Caixa
+        </a>
+
+        <a
+            href="pages/usuarios.html"
+            id="menu-usuarios">
+            Usuários
+        </a>
+
+        <a href="pages/agendamentos.html">
+            Agendamentos
+        </a>
+
+        <br>
+
+        <button id="btn-sair">
+            Sair
+        </button>
+
+    </div>
+
+    <div class="main">
+
+        <div class="header">
+            <h1>BATALHÃO DOS PNEUS</h1>
+        </div>
+
+        <div class="container">
+
+            <h2>Dashboard</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h2>Serviços Hoje</h2>
+                    <p id="servicos-hoje">0</p>
+                </div>
+
+                <div
+                    class="card"
+                    id="card-financeiro">
+
+                    <h2>Vendas Hoje</h2>
+
+                    <p id="vendas-hoje">
+                        R$ 0,00
+                    </p>
+
+                </div>
+
+                <div class="card">
+                    <h2>Estoque Baixo</h2>
+                    <p id="estoque-baixo">
+                        0 itens
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+BATALHÃO DOS PNEUS
+
+TELAS
+
+1. Login
+
+2. Dashboard
+- Faturamento do dia
+- Quantidade de serviços
+- Estoque baixo
+
+3. Serviços
+- Troca de pneu
+- Remendo
+- Vulcanização
+- Alinhamento
+
+4. Estoque
+- Novo pneu
+- Editar pneu
+- Baixa de estoque
+
+5. Vendas
+- Venda de pneus
+- Histórico
+
+6. Caixa
+- Entradas
+- Saídas
+
+7. Relatórios
+- Diário
+- Mensal
+
+8. Usuários
+- Administradores
+- Funcionários

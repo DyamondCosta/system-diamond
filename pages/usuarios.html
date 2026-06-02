@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usuários</title>
+
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>🛞 Batalhão</h2>
+
+<p id="usuario-logado"></p>
+
+<a href="../index.html">Dashboard</a>
+<a href="usuarios.html">Usuários</a>
+
+<button id="btn-sair">
+Sair
+</button>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+<h1>USUÁRIOS</h1>
+</div>
+
+<div class="container">
+
+<input id="nome" placeholder="Nome">
+
+<br><br>
+
+<input id="email" placeholder="Email">
+
+<br><br>
+
+<input id="senha" placeholder="Senha">
+
+<br><br>
+
+<select id="perfil">
+
+<option value="admin">
+Administrador
+</option>
+
+<option value="funcionario">
+Funcionário
+</option>
+
+</select>
+
+<br><br>
+
+<button onclick="salvarUsuario()">
+Salvar Usuário
+</button>
+
+<hr>
+
+<div id="lista-usuarios"></div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/usuarios.js"></script>
+
+</body>
+</html>
