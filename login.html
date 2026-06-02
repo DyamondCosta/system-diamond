@@ -7,98 +7,196 @@
 
 <title>System Diamond ERP</title>
 
-<link rel="stylesheet" href="css/style.css">
-
 <style>
 
-body{
+*{
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    background:
+    linear-gradient(
+        rgba(0,0,0,.75),
+        rgba(0,0,0,.75)
+    ),
+    url('https://images.unsplash.com/photo-1486006920555-c77dcf18193c');
+
+    background-size:cover;
+    background-position:center;
+
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
+
 }
 
-.login-container{
-    width:450px;
-    background:white;
-    border-radius:20px;
+.login-box{
+
+    width:500px;
+
+    background:#07111f;
+
+    border:1px solid #ff9800;
+
+    border-radius:25px;
+
     padding:40px;
-    box-shadow:0 20px 50px rgba(0,0,0,.3);
+
     text-align:center;
+
+    box-shadow:
+    0 0 30px rgba(255,152,0,.3);
+
 }
 
 .logo{
-    font-size:70px;
+
+    font-size:90px;
+
     margin-bottom:10px;
+
 }
 
-.titulo{
+.system{
+
+    color:white;
+
     font-size:32px;
+
     font-weight:bold;
-    color:#0f172a;
+
 }
 
-.subtitulo{
-    color:#64748b;
-    margin-bottom:25px;
+.erp{
+
+    color:#ff9800;
+
 }
 
-.cliente{
-    background:#f1f5f9;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:25px;
+.powered{
+
+    color:#c7c7c7;
+
+    font-style:italic;
+
+    margin-top:5px;
+
+    margin-bottom:30px;
+
 }
 
-.cliente h3{
-    margin:0;
-    color:#0f172a;
+.batalhao{
+
+    font-size:70px;
+
+    font-weight:900;
+
+    color:white;
+
+    line-height:70px;
+
+    text-transform:uppercase;
+
 }
 
-.cliente p{
-    margin:5px 0 0;
-    color:#64748b;
+.pneus{
+
+    color:#ff9800;
+
+}
+
+.modulos{
+
+    margin-top:20px;
+
+    margin-bottom:35px;
+
+    color:white;
+
+    font-size:15px;
+
 }
 
 input{
+
     width:100%;
+
     padding:15px;
+
     margin-bottom:15px;
-    border:1px solid #cbd5e1;
+
     border-radius:10px;
+
+    border:1px solid #444;
+
+    background:#0c1727;
+
+    color:white;
+
     font-size:16px;
-    box-sizing:border-box;
+
 }
 
 button{
+
     width:100%;
-    padding:15px;
+
+    padding:18px;
+
     border:none;
+
     border-radius:10px;
-    background:#0f172a;
-    color:white;
-    font-size:16px;
+
+    background:#ff9800;
+
+    color:black;
+
+    font-size:20px;
+
+    font-weight:bold;
+
     cursor:pointer;
-    transition:.3s;
+
 }
 
 button:hover{
-    background:#1e293b;
+
+    background:#ffb74d;
+
+}
+
+.info{
+
+    margin-top:25px;
+
+    color:white;
+
+    font-size:18px;
+
+}
+
+.info span{
+
+    color:#ff9800;
+
+    font-weight:bold;
+
 }
 
 .footer{
-    margin-top:25px;
-    font-size:13px;
-    color:#64748b;
-}
 
-.recursos{
-    margin-top:15px;
-    font-size:14px;
-    color:#475569;
+    margin-top:35px;
+
+    color:#bdbdbd;
+
+    font-size:13px;
+
 }
 
 </style>
@@ -107,29 +205,33 @@ button:hover{
 
 <body>
 
-<div class="login-container">
+<div class="login-box">
 
 <div class="logo">
-💎
+🔧
 </div>
 
-<div class="titulo">
-System Diamond ERP
+<div class="system">
+System Diamond <span class="erp">ERP</span>
 </div>
 
-<div class="subtitulo">
+<div class="powered">
 powered by LC Solutions
 </div>
 
-<div class="cliente">
+<div class="batalhao">
 
-<h3>
-🛞 Batalhão dos Pneus
-</h3>
+Batalhão<br>
 
-<p>
-Gestão de Estoque • Vendas • Serviços • Agendamentos
-</p>
+<span class="pneus">
+dos Pneus
+</span>
+
+</div>
+
+<div class="modulos">
+
+📦 Gestão de Estoque • 💰 Vendas • 🔧 Serviços • 📅 Agendamentos
 
 </div>
 
@@ -144,21 +246,22 @@ id="senha"
 placeholder="Digite sua senha">
 
 <button onclick="fazerLogin()">
-Entrar no Sistema
+ENTRAR NO SISTEMA
 </button>
 
-<div class="recursos">
+<div class="info">
 
-✔ Controle de Estoque<br>
-✔ Gestão de Clientes<br>
-✔ Controle Financeiro<br>
-✔ Agendamentos
+Gestão completa para sua oficina.<br>
+
+Mais controle,
+<span>mais resultados!</span>
 
 </div>
 
 <div class="footer">
 
 System Diamond ERP v1.0<br>
+
 Desenvolvido por Lucas Alves
 
 </div>
@@ -170,4 +273,5 @@ Desenvolvido por Lucas Alves
 <script src="js/login.js"></script>
 
 </body>
+
 </html>
