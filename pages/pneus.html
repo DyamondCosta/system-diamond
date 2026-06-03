@@ -1,93 +1,90 @@
-```html
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pneus</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="../css/style.css">
+<title>Estoque de Pneus</title>
+
+<link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
-    <div class="sidebar">
+<div class="sidebar">
 
-        <h2>🛞 Batalhão</h2>
+<h2>BATALHÃO DOS PNEUS</h2>
 
-        <p id="usuario-logado"></p>
+<p id="usuario-logado"></p>
 
-        <a href="../index.html">Dashboard</a>
-        <a href="clientes.html">Clientes</a>
-        <a href="pneus.html">Pneus</a>
-        <a href="servicos.html">Serviços</a>
-        <a href="vendas.html">Vendas</a>
-        <a href="ordens-servico.html">Ordens de Serviço</a>
-        <a href="caixa.html">Caixa</a>
-        <a href="agendamentos.html">Agendamentos</a>
+<a href="../index.html">Dashboard</a> <a href="clientes.html">Clientes</a> <a href="pneus.html">Estoque</a> <a href="servicos.html">Serviços</a> <a href="vendas.html">Vendas</a> <a href="ordens-servico.html">Ordens de Serviço</a> <a href="caixa.html">Caixa</a> <a href="agendamentos.html">Agendamentos</a>
 
-        <br>
+<button id="btn-sair">
+Sair
+</button>
 
-        <button id="btn-sair">
-            Sair
-        </button>
+</div>
 
-    </div>
+<div class="main">
 
-    <div class="main">
+<div class="header">
 
-        <div class="header">
-            <h1>🛞 ESTOQUE DE PNEUS</h1>
-        </div>
+<h1>ESTOQUE DE PNEUS</h1>
 
-        <div class="container">
+<p>
+Controle de estoque e movimentações
+</p>
 
-            <h2>Novo Pneu</h2>
+</div>
 
-            <input id="marca" placeholder="Marca">
-            <br><br>
+<div class="container">
 
-            <input id="modelo" placeholder="Modelo">
-            <br><br>
+<h2>Cadastro de Pneu</h2>
 
-            <input id="medida" placeholder="Medida">
-            <br><br>
+<input id="marca" placeholder="Marca">
+<br><br>
 
-            <input id="tipo" placeholder="Tipo">
-            <br><br>
+<input id="modelo" placeholder="Modelo">
+<br><br>
 
-            <input id="preco_compra" placeholder="Preço Compra">
-            <br><br>
+<input id="medida" placeholder="Medida">
+<br><br>
 
-            <input id="preco_venda" placeholder="Preço Venda">
-            <br><br>
+<input id="tipo" placeholder="Tipo">
+<br><br>
 
-            <input id="quantidade" placeholder="Quantidade">
-            <br><br>
+<input id="preco_compra" placeholder="Preço de Compra">
+<br><br>
 
-            <button onclick="salvarPneu()">
-                Salvar Pneu
-            </button>
+<input id="preco_venda" placeholder="Preço de Venda">
+<br><br>
 
-            <hr>
+<input id="quantidade" placeholder="Quantidade">
+<br><br>
 
-            <h2>Estoque</h2>
+<button onclick="salvarPneu()">
+Salvar
+</button>
 
-            <div id="lista-pneus"></div>
+<hr>
 
-        </div>
+<h2>Itens em Estoque</h2>
 
-    </div>
+<div id="lista-pneus"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div>
 
-    <script src="../js/config.js"></script>
+</div>
 
-    <script src="../js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script src="../js/pneus.js"></script>
+<script src="../js/config.js"></script>
+
+<script src="../js/auth.js"></script>
+
+<script src="../js/pneus.js"></script>
 
 </body>
 </html>
-```
