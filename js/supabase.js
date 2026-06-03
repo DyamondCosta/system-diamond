@@ -4,51 +4,63 @@ async function carregarDashboard() {
     try {
         const hoje = new Date().toISOString().split('T')[0];
         const primeiroDiaMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-            .toISOString().split('T')[0];
+            .toISOString()
+            .split('T')[0];
 
-        // VENDAS
+        /*
+        VENDAS
+        */
         const { data: vendas } = await clienteSupabase.from('vendas').select('*');
+
         const vendasHoje = (vendas || []).filter(v => v.data_venda === hoje);
-        const totalVendasHoje = vendasHoje.reduce((t, v) => t + Number(v.valor_total || 0), 0);
+        const totalHoje = vendasHoje.reduce((total, v) => total + Number(v.valor_total || 0), 0);
+
         const vendasMes = (vendas || []).filter(v => v.data_venda >= primeiroDiaMes);
-        const totalVendasMes = vendasMes.reduce((t, v) => t + Number(v.valor_total || 0), 0);
+        const totalMes = vendasMes.reduce((total, v) => total + Number(v.valor_total || 0), 0);
 
-        // SAÍDAS DO DIA
-        const { data: saidas } = await clienteSupabase.from('caixa').select('*').eq('tipo', 'SAÍDA');
-        const saidasHoje = (saidas || []).filter(s => s.data_caixa === hoje);
-        const totalSaidasHoje = saidasHoje.reduce((t, s) => t + Number(s.valor || 0), 0);
-
-        // LUCRO
-        const lucroHoje = totalVendasHoje - totalSaidasHoje;
-
-        // SERVIÇOS
+        /*
+        SERVIÇOS
+        */
         const { count: servicosTotal } = await clienteSupabase
-            .from('servicos').select('*', { count: 'exact', head: true });
+            .from('servicos')
+            .select('*', { count: 'exact', head: true });
 
-        // OS ABERTAS
+        /*
+        OS ABERTAS
+        */
         const { count: osAbertas } = await clienteSupabase
-            .from('ordens_servico').select('*', { count: 'exact', head: true })
+            .from('ordens_servico')
+            .select('*', { count: 'exact', head: true })
             .neq('status', 'FINALIZADA');
 
-        // ESTOQUE BAIXO
+        /*
+        ESTOQUE BAIXO
+        */
         const { count: estoqueBaixo } = await clienteSupabase
-            .from('pneus').select('*', { count: 'exact', head: true })
-            .lte('quantidade', 3).eq('ativo', true);
+            .from('pneus')
+            .select('*', { count: 'exact', head: true })
+            .lte('quantidade', 3)
+            .eq('ativo', true); // filtra apenas pneus ativos
 
-        // TOTAL PNEUS ATIVOS
+        /*
+        TOTAL DE PNEUS
+        */
         const { data: pneus } = await clienteSupabase
-            .from('pneus').select('quantidade').eq('ativo', true);
-        const totalPneus = (pneus || []).reduce((t, p) => t + Number(p.quantidade || 0), 0);
+            .from('pneus')
+            .select('quantidade')
+            .eq('ativo', true); // filtra apenas pneus ativos
 
-        // Atualiza dashboard
+        const totalPneus = (pneus || []).reduce((total, p) => total + Number(p.quantidade || 0), 0);
+
+        /*
+        ATUALIZA DASHBOARD
+        */
         document.getElementById('servicos-hoje').textContent = servicosTotal || 0;
-        document.getElementById('vendas-hoje').textContent = `R$ ${totalVendasHoje.toFixed(2)}`;
-        document.getElementById('faturamento-mes').textContent = `R$ ${totalVendasMes.toFixed(2)}`;
+        document.getElementById('vendas-hoje').textContent = `R$ ${totalHoje.toFixed(2)}`;
+        document.getElementById('faturamento-mes').textContent = `R$ ${totalMes.toFixed(2)}`;
         document.getElementById('os-abertas').textContent = osAbertas || 0;
         document.getElementById('estoque-baixo').textContent = estoqueBaixo || 0;
         document.getElementById('total-pneus').textContent = totalPneus || 0;
-        document.getElementById('saidas-hoje').textContent = `R$ ${totalSaidasHoje.toFixed(2)}`;
-        document.getElementById('lucro-hoje').textContent = `R$ ${lucroHoje.toFixed(2)}`;
 
     } catch (erro) {
         console.error('Erro Dashboard:', erro);
