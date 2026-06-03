@@ -1,203 +1,251 @@
 const clienteSupabase =
 window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
+SUPABASE_URL,
+SUPABASE_ANON_KEY
 );
 
-async function carregarDashboard() {
+async function carregarDashboard(){
 
-    const hojeDate = new Date();
+try{
 
-    const hoje =
-    hojeDate.toISOString().split('T')[0];
+const hoje =
+new Date()
+.toISOString()
+.split('T')[0];
 
-    const ontemDate =
-    new Date();
+const primeiroDiaMes =
+new Date(
+new Date().getFullYear(),
+new Date().getMonth(),
+1
+)
+.toISOString()
+.split('T')[0];
 
-    ontemDate.setDate(
-        ontemDate.getDate() - 1
-    );
+# /*
 
-    const ontem =
-    ontemDate.toISOString().split('T')[0];
+# VENDAS
 
-    const inicioMes =
-    new Date(
-        hojeDate.getFullYear(),
-        hojeDate.getMonth(),
-        1
-    ).toISOString().split('T')[0];
+*/
 
-    /* SERVIÇOS HOJE */
+const {
+data:vendas
+} =
+await clienteSupabase
+.from('vendas')
+.select('*');
 
-    const {
-        count: servicosHoje
-    } = await clienteSupabase
-    .from('servicos_executados')
-    .select('*',{
-        count:'exact',
-        head:true
-    })
-    .eq(
-        'data_servico',
-        hoje
-    );
+const vendasHoje =
+(vendas || [])
+.filter(v => {
 
-    /* SERVIÇOS ONTEM */
+if(!v.created_at)
+return false;
 
-    const {
-        count: servicosOntem
-    } = await clienteSupabase
-    .from('servicos_executados')
-    .select('*',{
-        count:'exact',
-        head:true
-    })
-    .eq(
-        'data_servico',
-        ontem
-    );
+return v.created_at
+.startsWith(hoje);
 
-    /* SERVIÇOS TOTAL */
+});
 
-    const {
-        count: servicosTotal
-    } = await clienteSupabase
-    .from('servicos_executados')
-    .select('*',{
-        count:'exact',
-        head:true
-    });
+const totalHoje =
+vendasHoje.reduce(
+(total,v) =>
+total +
+Number(
+v.valor_total || 0
+),
+0
+);
 
-    /* VENDAS HOJE */
+const vendasMes =
+(vendas || [])
+.filter(v => {
 
-    const {
-        data: vendasHoje
-    } = await clienteSupabase
-    .from('vendas')
-    .select('valor_total')
-    .eq(
-        'data_venda',
-        hoje
-    );
+if(!v.created_at)
+return false;
 
-    /* VENDAS ONTEM */
+return v.created_at >=
+primeiroDiaMes;
 
-    const {
-        data: vendasOntem
-    } = await clienteSupabase
-    .from('vendas')
-    .select('valor_total')
-    .eq(
-        'data_venda',
-        ontem
-    );
+});
 
-    /* FATURAMENTO MÊS */
+const totalMes =
+vendasMes.reduce(
+(total,v) =>
+total +
+Number(
+v.valor_total || 0
+),
+0
+);
 
-    const {
-        data: vendasMes
-    } = await clienteSupabase
-    .from('vendas')
-    .select('valor_total')
-    .gte(
-        'data_venda',
-        inicioMes
-    );
+# /*
 
-    /* OS ABERTAS */
+# SERVIÇOS
 
-    const {
-        count: osAbertas
-    } = await clienteSupabase
-    .from('ordens_servico')
-    .select('*',{
-        count:'exact',
-        head:true
-    })
-    .neq(
-        'status',
-        'FINALIZADA'
-    );
+*/
 
-    /* ESTOQUE BAIXO */
+const {
+count:servicosTotal
+} =
+await clienteSupabase
+.from('servicos')
+.select('*',{
+count:'exact',
+head:true
+});
 
-    const {
-        count: estoqueBaixo
-    } = await clienteSupabase
-    .from('pneus')
-    .select('*',{
-        count:'exact',
-        head:true
-    })
-    .lte(
-        'quantidade',
-        5
-    );
+# /*
 
-    const totalHoje =
-    (vendasHoje || [])
-    .reduce(
-        (s,v) =>
-        s + Number(v.valor_total || 0),
-        0
-    );
+# OS
 
-    const totalOntem =
-    (vendasOntem || [])
-    .reduce(
-        (s,v) =>
-        s + Number(v.valor_total || 0),
-        0
-    );
+*/
 
-    const totalMes =
-    (vendasMes || [])
-    .reduce(
-        (s,v) =>
-        s + Number(v.valor_total || 0),
-        0
-    );
+const {
+count:osAbertas
+} =
+await clienteSupabase
+.from('ordens_servico')
+.select('*',{
+count:'exact',
+head:true
+})
+.neq(
+'status',
+'FINALIZADA'
+);
 
-    document.getElementById(
-        'servicos-hoje'
-    ).textContent =
-    servicosHoje || 0;
+# /*
 
-    document.getElementById(
-        'servicos-ontem'
-    ).textContent =
-    servicosOntem || 0;
+# ESTOQUE BAIXO
 
-    document.getElementById(
-        'servicos-total'
-    ).textContent =
-    servicosTotal || 0;
+*/
 
-    document.getElementById(
-        'vendas-hoje'
-    ).textContent =
-    `R$ ${totalHoje.toFixed(2)}`;
+const {
+count:estoqueBaixo
+} =
+await clienteSupabase
+.from('pneus')
+.select('*',{
+count:'exact',
+head:true
+})
+.lte(
+'quantidade',
+3
+);
 
-    document.getElementById(
-        'vendas-ontem'
-    ).textContent =
-    `R$ ${totalOntem.toFixed(2)}`;
+# /*
 
-    document.getElementById(
-        'faturamento-mes'
-    ).textContent =
-    `R$ ${totalMes.toFixed(2)}`;
+# TOTAL PNEUS
 
-    document.getElementById(
-        'os-abertas'
-    ).textContent =
-    osAbertas || 0;
+*/
 
-    document.getElementById(
-        'estoque-baixo'
-    ).textContent =
-    estoqueBaixo || 0;
+const {
+data:pneus
+} =
+await clienteSupabase
+.from('pneus')
+.select(
+'quantidade'
+);
+
+const totalPneus =
+(pneus || [])
+.reduce(
+(total,p) =>
+total +
+Number(
+p.quantidade || 0
+),
+0
+);
+
+# /*
+
+# ATUALIZA CAMPOS
+
+*/
+
+const servicosHoje =
+document.getElementById(
+'servicos-hoje'
+);
+
+if(servicosHoje){
+
+servicosHoje.textContent =
+servicosTotal || 0;
+
+}
+
+const vendasHojeCampo =
+document.getElementById(
+'vendas-hoje'
+);
+
+if(vendasHojeCampo){
+
+vendasHojeCampo.textContent =
+`R$ ${totalHoje.toFixed(2)}`;
+
+}
+
+const faturamentoMes =
+document.getElementById(
+'faturamento-mes'
+);
+
+if(faturamentoMes){
+
+faturamentoMes.textContent =
+`R$ ${totalMes.toFixed(2)}`;
+
+}
+
+const osCampo =
+document.getElementById(
+'os-abertas'
+);
+
+if(osCampo){
+
+osCampo.textContent =
+osAbertas || 0;
+
+}
+
+const estoqueCampo =
+document.getElementById(
+'estoque-baixo'
+);
+
+if(estoqueCampo){
+
+estoqueCampo.textContent =
+estoqueBaixo || 0;
+
+}
+
+const totalPneusCampo =
+document.getElementById(
+'total-pneus'
+);
+
+if(totalPneusCampo){
+
+totalPneusCampo.textContent =
+totalPneus || 0;
+
+}
+
+}catch(erro){
+
+console.log(
+erro
+);
+
+}
 
 }
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
@@ -60,11 +61,19 @@ Sair
 
 <div class="container">
 
-<h2>Nova Ordem de Serviço</h2>
+<h2>
+Nova Ordem de Serviço
+</h2>
 
 <input
 id="cliente_nome"
-placeholder="Cliente">
+placeholder="Nome do Cliente">
+
+<br><br>
+
+<input
+id="telefone"
+placeholder="Telefone">
 
 <br><br>
 
@@ -82,13 +91,13 @@ placeholder="Veículo">
 
 <input
 id="servico"
-placeholder="Serviço">
+placeholder="Serviço Executado">
 
 <br><br>
 
 <input
 id="valor_total"
-placeholder="Valor">
+placeholder="Valor Total">
 
 <br><br>
 
@@ -103,6 +112,10 @@ EM ANDAMENTO
 </option>
 
 <option>
+AGUARDANDO PEÇAS
+</option>
+
+<option>
 FINALIZADA
 </option>
 
@@ -112,22 +125,28 @@ FINALIZADA
 
 <textarea
 id="observacao"
-placeholder="Observação">
+placeholder="Observações">
 </textarea>
 
 <br><br>
 
 <button onclick="salvarOS()">
+
 Salvar OS
+
 </button>
 
-<button onclick="window.print()">
-Imprimir
+<button onclick="gerarPDF()">
+
+Gerar PDF
+
 </button>
 
 <hr>
 
-<h2>Ordens de Serviço</h2>
+<h2>
+Ordens de Serviço
+</h2>
 
 <div id="lista-os"></div>
 
@@ -136,6 +155,8 @@ Imprimir
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="../js/config.js"></script>
 

@@ -1,87 +1,261 @@
-const clienteSupabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
+const clienteSupabase =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
 );
 
 async function salvarPneu() {
 
-    const marca = document.getElementById('marca').value;
-    const modelo = document.getElementById('modelo').value;
-    const medida = document.getElementById('medida').value;
-    const tipo = document.getElementById('tipo').value;
+const marca =
+document.getElementById(
+'marca'
+).value;
 
-    const preco_compra =
-        document.getElementById('preco_compra').value;
+const modelo =
+document.getElementById(
+'modelo'
+).value;
 
-    const preco_venda =
-        document.getElementById('preco_venda').value;
+const medida =
+document.getElementById(
+'medida'
+).value;
 
-    const quantidade =
-        document.getElementById('quantidade').value;
+const tipo =
+document.getElementById(
+'tipo'
+).value;
 
-    const { error } = await clienteSupabase
-        .from('pneus')
-        .insert([
-            {
-                marca,
-                modelo,
-                medida,
-                tipo,
-                preco_compra,
-                preco_venda,
-                quantidade
-            }
-        ]);
+const preco_compra =
+Number(
+document.getElementById(
+'preco_compra'
+).value
+);
 
-    if (error) {
+const preco_venda =
+Number(
+document.getElementById(
+'preco_venda'
+).value
+);
 
-        console.log(error);
-        alert('Erro ao salvar');
+const quantidade =
+Number(
+document.getElementById(
+'quantidade'
+).value
+);
 
-        return;
-    }
+const { error } =
+await clienteSupabase
+.from('pneus')
+.insert([
+{
+marca,
+modelo,
+medida,
+tipo,
+preco_compra,
+preco_venda,
+quantidade
+}
+]);
 
-    alert('Pneu salvo');
+if(error){
 
-    carregarPneus();
+console.log(error);
+
+alert(
+'Erro ao salvar pneu'
+);
+
+return;
 
 }
 
-async function carregarPneus() {
+alert(
+'Pneu salvo com sucesso'
+);
 
-    const { data } = await clienteSupabase
-        .from('pneus')
-        .select('*')
-        .order('id', { ascending: false });
+document.getElementById(
+'marca'
+).value = '';
 
-    const lista =
-        document.getElementById('lista-pneus');
+document.getElementById(
+'modelo'
+).value = '';
 
-    lista.innerHTML = '';
+document.getElementById(
+'medida'
+).value = '';
 
-    data.forEach(pneu => {
+document.getElementById(
+'tipo'
+).value = '';
 
-        lista.innerHTML += `
-            <div class="card">
+document.getElementById(
+'preco_compra'
+).value = '';
 
-                <h3>
-                    ${pneu.marca}
-                    ${pneu.modelo}
-                </h3>
+document.getElementById(
+'preco_venda'
+).value = '';
 
-                <p>
-                    ${pneu.medida}
-                </p>
+document.getElementById(
+'quantidade'
+).value = '';
 
-                <p>
-                    Estoque:
-                    ${pneu.quantidade}
-                </p>
+carregarPneus();
 
-            </div>
-        `;
+}
 
-    });
+async function carregarPneus(){
+
+const { data, error } =
+await clienteSupabase
+.from('pneus')
+.select('*')
+.order(
+'id',
+{
+ascending:false
+}
+);
+
+if(error){
+
+console.log(error);
+return;
+
+}
+
+const lista =
+document.getElementById(
+'lista-pneus'
+);
+
+lista.innerHTML='';
+
+data.forEach(pneu=>{
+
+const estoqueBaixo =
+Number(
+pneu.quantidade
+) <= 3;
+
+lista.innerHTML += `
+
+<div class="card">
+
+<h3>
+
+${pneu.marca}
+${pneu.modelo}
+
+</h3>
+
+<p>
+
+📏 ${pneu.medida}
+
+</p>
+
+<p>
+
+🏷️ ${pneu.tipo}
+
+</p>
+
+<p>
+
+💰 Compra:
+R$ ${pneu.preco_compra}
+
+</p>
+
+<p>
+
+💵 Venda:
+R$ ${pneu.preco_venda}
+
+</p>
+
+<p>
+
+📦 Estoque:
+${pneu.quantidade}
+
+</p>
+
+<p style="
+color:
+${estoqueBaixo ? 'red' : 'green'};
+font-weight:bold;
+">
+
+${estoqueBaixo
+? '⚠ ESTOQUE BAIXO'
+: '✔ ESTOQUE OK'}
+
+</p>
+
+<button
+onclick="excluirPneu(${pneu.id})"
+
+>
+
+Excluir
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+async function excluirPneu(id){
+
+const confirmar =
+confirm(
+'Deseja excluir este pneu?'
+);
+
+if(!confirmar){
+
+return;
+
+}
+
+const { error } =
+await clienteSupabase
+.from('pneus')
+.delete()
+.eq(
+'id',
+id
+);
+
+if(error){
+
+console.log(error);
+
+alert(
+'Erro ao excluir'
+);
+
+return;
+
+}
+
+alert(
+'Pneu excluído'
+);
+
+carregarPneus();
 
 }
 

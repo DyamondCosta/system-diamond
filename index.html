@@ -1,11 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LC Solutions</title>
+<title>LC Solutions ERP</title>
 
 <link rel="stylesheet" href="css/style.css">
 
@@ -67,8 +69,7 @@ Vendas
 
 <a href="pages/caixa.html"
 id="menu-caixa">
-Caixa
-</a>
+Caixa </a>
 
 <a href="pages/agendamentos.html">
 Agendamentos
@@ -76,8 +77,7 @@ Agendamentos
 
 <a href="pages/usuarios.html"
 id="menu-usuarios">
-Usuários
-</a>
+Usuários </a>
 
 <br>
 
@@ -109,10 +109,13 @@ Dashboard Operacional
 
 <div class="cards">
 
-<div class="card">
+<div
+class="card"
+onclick="window.location.href='pages/servicos.html'"
+style="cursor:pointer;">
 
 <h2>
-Serviços Hoje
+Serviços
 </h2>
 
 <p id="servicos-hoje">
@@ -121,31 +124,10 @@ Serviços Hoje
 
 </div>
 
-<div class="card">
-
-<h2>
-Serviços Ontem
-</h2>
-
-<p id="servicos-ontem">
-0
-</p>
-
-</div>
-
-<div class="card">
-
-<h2>
-Serviços Total
-</h2>
-
-<p id="servicos-total">
-0
-</p>
-
-</div>
-
-<div class="card" id="card-financeiro">
+<div
+class="card"
+onclick="window.location.href='pages/vendas.html'"
+style="cursor:pointer;">
 
 <h2>
 Vendas Hoje
@@ -157,31 +139,10 @@ R$ 0,00
 
 </div>
 
-<div class="card" id="card-financeiro-ontem">
-
-<h2>
-Vendas Ontem
-</h2>
-
-<p id="vendas-ontem">
-R$ 0,00
-</p>
-
-</div>
-
-<div class="card" id="card-financeiro-mes">
-
-<h2>
-Faturamento do Mês
-</h2>
-
-<p id="faturamento-mes">
-R$ 0,00
-</p>
-
-</div>
-
-<div class="card">
+<div
+class="card"
+onclick="window.location.href='pages/ordens-servico.html'"
+style="cursor:pointer;">
 
 <h2>
 OS Abertas
@@ -204,6 +165,35 @@ Estoque Baixo
 
 <p id="estoque-baixo">
 0
+</p>
+
+</div>
+
+<div
+class="card"
+onclick="window.location.href='pages/pneus.html'"
+style="cursor:pointer;">
+
+<h2>
+Total de Pneus
+</h2>
+
+<p id="total-pneus">
+0
+</p>
+
+</div>
+
+<div
+class="card"
+id="card-financeiro-mes">
+
+<h2>
+Faturamento do Mês
+</h2>
+
+<p id="faturamento-mes">
+R$ 0,00
 </p>
 
 </div>
