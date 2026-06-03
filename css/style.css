@@ -519,3 +519,31 @@ body{
     transform:none;
 
 }
+.os-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.os-form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.os-form-group {
+  flex: 1;
+}
+
+.os-form-group.full-width {
+  flex: 2;
+}
+
+.os-form-group input,
+.os-form-group select,
+.os-form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
