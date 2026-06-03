@@ -1,28 +1,101 @@
-const clienteSupabase = window.supabase.createClient(
+const clienteSupabase =
+window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
 
 async function carregarDashboard() {
 
-    const { data, error } = await clienteSupabase
-        .from('dashboard')
-        .select('*')
-        .single();
+    const hoje =
+    new Date()
+    .toISOString()
+    .split('T')[0];
 
-    console.log(data);
-    console.log(error);
+    const ontemDate =
+    new Date();
 
-    if (error) return;
+    ontemDate.setDate(
+        ontemDate.getDate() - 1
+    );
 
-    document.getElementById('servicos-hoje').textContent =
-        data.total_servicos;
+    const ontem =
+    ontemDate
+    .toISOString()
+    .split('T')[0];
 
-    document.getElementById('vendas-hoje').textContent =
-        `R$ ${data.total_vendas}`;
+    /* SERVIÇOS HOJE */
 
-    document.getElementById('estoque-baixo').textContent =
-        `${data.estoque_baixo} itens`;
+    const {
+        count:
+        servicosHoje
+    } = await clienteSupabase
+    .from('servicos')
+    .select('*', {
+        count:'exact',
+        head:true
+    })
+    .eq(
+        'data_servico',
+        hoje
+    );
+
+    /* SERVIÇOS ONTEM */
+
+    const {
+        count:
+        servicosOntem
+    } = await clienteSupabase
+    .from('servicos')
+    .select('*', {
+        count:'exact',
+        head:true
+    })
+    .eq(
+        'data_servico',
+        ontem
+    );
+
+    /* TOTAL SERVIÇOS */
+
+    const {
+        count:
+        totalServicos
+    } = await clienteSupabase
+    .from('servicos')
+    .select('*',{
+        count:'exact',
+        head:true
+    });
+
+    document.getElementById(
+        'servicos-hoje'
+    ).textContent =
+    servicosHoje || 0;
+
+    const campoOntem =
+    document.getElementById(
+        'servicos-ontem'
+    );
+
+    if(campoOntem){
+
+        campoOntem.textContent =
+        servicosOntem || 0;
+
+    }
+
+    const campoTotal =
+    document.getElementById(
+        'servicos-total'
+    );
+
+    if(campoTotal){
+
+        campoTotal.textContent =
+        totalServicos || 0;
+
+    }
+
 }
 
 carregarDashboard();

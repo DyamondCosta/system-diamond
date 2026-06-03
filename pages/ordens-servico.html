@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ordens de Serviço</title>
+
+<link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>🔧 LC Solutions</h2>
+
+<p id="usuario-logado"></p>
+
+<a href="../index.html">Dashboard</a>
+
+<a href="clientes.html">Clientes</a>
+
+<a href="pneus.html">Pneus</a>
+
+<a href="servicos.html">Serviços</a>
+
+<a href="vendas.html">Vendas</a>
+
+<a href="ordens-servico.html">
+Ordens de Serviço
+</a>
+
+<a href="caixa.html">
+Caixa
+</a>
+
+<a href="agendamentos.html">
+Agendamentos
+</a>
+
+<button id="btn-sair">
+Sair
+</button>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+
+<h1>
+📋 ORDENS DE SERVIÇO
+</h1>
+
+</div>
+
+<div class="container">
+
+<h2>Nova Ordem de Serviço</h2>
+
+<input
+id="cliente_nome"
+placeholder="Cliente">
+
+<br><br>
+
+<input
+id="placa"
+placeholder="Placa">
+
+<br><br>
+
+<input
+id="veiculo"
+placeholder="Veículo">
+
+<br><br>
+
+<input
+id="servico"
+placeholder="Serviço">
+
+<br><br>
+
+<input
+id="valor_total"
+placeholder="Valor">
+
+<br><br>
+
+<select id="status">
+
+<option>
+ABERTA
+</option>
+
+<option>
+EM ANDAMENTO
+</option>
+
+<option>
+FINALIZADA
+</option>
+
+</select>
+
+<br><br>
+
+<textarea
+id="observacao"
+placeholder="Observação">
+</textarea>
+
+<br><br>
+
+<button onclick="salvarOS()">
+Salvar OS
+</button>
+
+<button onclick="window.print()">
+Imprimir
+</button>
+
+<hr>
+
+<h2>Ordens de Serviço</h2>
+
+<div id="lista-os"></div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/config.js"></script>
+
+<script src="../js/auth.js"></script>
+
+<script src="../js/ordens-servico.js"></script>
+
+</body>
+
+</html>
