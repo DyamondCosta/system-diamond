@@ -4,6 +4,8 @@ SUPABASE_URL,
 SUPABASE_ANON_KEY
 );
 
+let osEditando = null;
+
 async function salvarOS(){
 
 try{
@@ -50,6 +52,50 @@ document.getElementById(
 'observacao'
 ).value;
 
+if(osEditando){
+
+const { error } =
+await clienteSupabase
+.from('ordens_servico')
+.update({
+cliente_nome,
+telefone,
+placa,
+veiculo,
+servico,
+valor_total,
+status,
+observacao
+})
+.eq(
+'id',
+osEditando
+);
+
+if(error){
+
+alert(
+'Erro ao atualizar OS'
+);
+
+return;
+
+}
+
+alert(
+'OS atualizada com sucesso'
+);
+
+osEditando = null;
+
+limparFormulario();
+
+carregarOS();
+
+return;
+
+}
+
 const { error } =
 await clienteSupabase
 .from('ordens_servico')
@@ -82,6 +128,24 @@ alert(
 'OS criada com sucesso'
 );
 
+limparFormulario();
+
+carregarOS();
+
+}catch(erro){
+
+console.log(erro);
+
+alert(
+'Erro interno'
+);
+
+}
+
+}
+
+function limparFormulario(){
+
 document.getElementById(
 'cliente_nome'
 ).value='';
@@ -110,17 +174,9 @@ document.getElementById(
 'observacao'
 ).value='';
 
-carregarOS();
-
-}catch(erro){
-
-console.log(erro);
-
-alert(
-'Erro interno'
-);
-
-}
+document.getElementById(
+'status'
+).value='ABERTA';
 
 }
 
@@ -153,64 +209,86 @@ lista.innerHTML='';
 
 data.forEach(os=>{
 
+let corStatus = 'black';
+
+if(os.status === 'ABERTA'){
+corStatus = '#ff9800';
+}
+
+if(os.status === 'EM ANDAMENTO'){
+corStatus = '#2196f3';
+}
+
+if(os.status === 'FINALIZADA'){
+corStatus = '#4caf50';
+}
+
 lista.innerHTML += `
 
 <div class="card">
 
 <h3>
-OS #${os.id}
+📋 OS #${os.id}
 </h3>
 
 <p>
-Cliente:
-${os.cliente_nome}
+👤 ${os.cliente_nome || ''}
 </p>
 
 <p>
-Telefone:
-${os.telefone || ''}
+📞 ${os.telefone || ''}
 </p>
 
 <p>
-Placa:
-${os.placa}
+🚗 ${os.placa || ''}
 </p>
 
 <p>
-Veículo:
-${os.veiculo}
+🚘 ${os.veiculo || ''}
 </p>
 
 <p>
-Serviço:
-${os.servico}
+🔧 ${os.servico || ''}
 </p>
 
 <p>
-Valor:
-R$ ${Number(
+💰 R$ ${Number(
 os.valor_total || 0
 ).toFixed(2)}
 </p>
 
-<p>
-Status:
+<p style="
+font-weight:bold;
+color:${corStatus};
+">
 ${os.status}
 </p>
 
 <button
+onclick="editarOS(${os.id})">
+✏️ Editar </button>
+
+<button
+onclick="finalizarOS(${os.id})">
+✅ Finalizar </button>
+
+<button
+onclick="excluirOS(${os.id})">
+🗑️ Excluir </button>
+
+<button
 onclick="gerarPDFIndividual(
-'${os.cliente_nome}',
+'${os.cliente_nome || ''}',
 '${os.telefone || ''}',
-'${os.placa}',
-'${os.veiculo}',
-'${os.servico}',
-'${os.valor_total}',
-'${os.status}',
+'${os.placa || ''}',
+'${os.veiculo || ''}',
+'${os.servico || ''}',
+'${os.valor_total || 0}',
+'${os.status || ''}',
 '${os.observacao || ''}',
 '${os.id}'
 )">
-PDF </button>
+📄 PDF </button>
 
 </div>
 
@@ -220,101 +298,123 @@ PDF </button>
 
 }
 
-function gerarPDF(){
+async function editarOS(id){
 
-const { jsPDF } =
-window.jspdf;
+const { data } =
+await clienteSupabase
+.from('ordens_servico')
+.select('*')
+.eq('id', id)
+.single();
 
-const doc =
-new jsPDF();
+if(!data) return;
 
-doc.setFontSize(18);
+osEditando = id;
 
-doc.text(
-'BATALHÃO DOS PNEUS',
-20,
-20
-);
-
-doc.setFontSize(12);
-
-doc.text(
-'ORDEM DE SERVIÇO',
-20,
-30
-);
-
-doc.text(
-'Cliente: ' +
 document.getElementById(
 'cliente_nome'
-).value,
-20,
-50
-);
+).value =
+data.cliente_nome || '';
 
-doc.text(
-'Telefone: ' +
 document.getElementById(
 'telefone'
-).value,
-20,
-60
-);
+).value =
+data.telefone || '';
 
-doc.text(
-'Placa: ' +
 document.getElementById(
 'placa'
-).value,
-20,
-70
-);
+).value =
+data.placa || '';
 
-doc.text(
-'Veículo: ' +
 document.getElementById(
 'veiculo'
-).value,
-20,
-80
-);
+).value =
+data.veiculo || '';
 
-doc.text(
-'Serviço: ' +
 document.getElementById(
 'servico'
-).value,
-20,
-90
-);
+).value =
+data.servico || '';
 
-doc.text(
-'Valor: R$ ' +
 document.getElementById(
 'valor_total'
-).value,
-20,
-100
-);
+).value =
+data.valor_total || '';
 
-doc.text(
-'Observações:',
-20,
-120
-);
+document.getElementById(
+'status'
+).value =
+data.status || 'ABERTA';
 
-doc.text(
 document.getElementById(
 'observacao'
-).value,
-20,
-130
+).value =
+data.observacao || '';
+
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
+
+}
+
+async function excluirOS(id){
+
+if(
+!confirm(
+'Deseja excluir esta OS?'
+)
+){
+return;
+}
+
+const { error } =
+await clienteSupabase
+.from('ordens_servico')
+.delete()
+.eq(
+'id',
+id
 );
 
-doc.save(
-'ordem-servico.pdf'
+if(error){
+
+alert(
+'Erro ao excluir'
 );
+
+return;
+
+}
+
+carregarOS();
+
+}
+
+async function finalizarOS(id){
+
+const { error } =
+await clienteSupabase
+.from('ordens_servico')
+.update({
+status:'FINALIZADA'
+})
+.eq(
+'id',
+id
+);
+
+if(error){
+
+alert(
+'Erro ao finalizar'
+);
+
+return;
+
+}
+
+carregarOS();
 
 }
 
@@ -336,78 +436,120 @@ window.jspdf;
 const doc =
 new jsPDF();
 
+doc.setDrawColor(0);
+doc.rect(
+10,
+10,
+190,
+270
+);
+
 doc.setFontSize(18);
 
 doc.text(
 'BATALHÃO DOS PNEUS',
-20,
-20
+55,
+25
 );
 
 doc.setFontSize(12);
 
 doc.text(
-'OS #' + id,
+`OS Nº ${id}`,
 20,
-35
+40
 );
 
 doc.text(
-'Cliente: ' + cliente,
-20,
-50
-);
-
-doc.text(
-'Telefone: ' + telefone,
+`Cliente: ${cliente}`,
 20,
 60
 );
 
 doc.text(
-'Placa: ' + placa,
+`Telefone: ${telefone}`,
 20,
 70
 );
 
 doc.text(
-'Veículo: ' + veiculo,
+`Placa: ${placa}`,
 20,
 80
 );
 
 doc.text(
-'Serviço: ' + servico,
+`Veículo: ${veiculo}`,
 20,
 90
 );
 
 doc.text(
-'Valor: R$ ' + valor,
-20,
-100
-);
-
-doc.text(
-'Status: ' + status,
+`Serviço: ${servico}`,
 20,
 110
 );
 
 doc.text(
-'Observação:',
+`Valor: R$ ${valor}`,
 20,
-125
+120
 );
 
 doc.text(
-observacao,
+`Status: ${status}`,
 20,
-135
+130
+);
+
+doc.text(
+'Observações:',
+20,
+150
+);
+
+doc.text(
+observacao || '',
+20,
+160
+);
+
+doc.line(
+20,
+220,
+90,
+220
+);
+
+doc.text(
+'Assinatura Cliente',
+20,
+228
+);
+
+doc.line(
+110,
+220,
+180,
+220
+);
+
+doc.text(
+'Responsável',
+120,
+228
 );
 
 doc.save(
 `OS-${id}.pdf`
+);
+
+}
+
+function gerarPDF(){
+
+alert(
+'Salve a OS primeiro para gerar PDF.'
 );
 
 }
