@@ -146,8 +146,18 @@ usuario.nome
 
 ||
 
-usuario.perfil ===
-'admin';
+usuario.perfil === 'admin'
+
+||
+
+usuario.perfil === 'gerente';
+
+/*
+================================
+ACESSO TOTAL
+ADMIN E GERENTE
+================================
+*/
 
 if (!ehAdmin) {
 
@@ -174,8 +184,6 @@ menuUsuarios.style.display =
 'none';
 
 }
-
-/* CARDS FINANCEIROS */
 
 const cardFinanceiro =
 document.getElementById(
