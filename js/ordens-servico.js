@@ -292,70 +292,29 @@ corStatus='#4caf50';
 }
 
 lista.innerHTML += `
-
 <div class="card os-card">
 
-<h3>
-📋 OS #${os.id}
-</h3>
+  <div class="os-header">
+    <h3>📋 OS #${os.id}</h3>
+    <span class="os-status" style="color:${corStatus}; font-weight:bold;">${os.status}</span>
+  </div>
 
-<p>
-Telefone: ${os.telefone}
-</p>
+  <div class="os-info">
+    <p>📞 ${os.telefone}</p>
+    <p>🚗 ${os.placa} | ${os.veiculo}</p>
+    <p>🔧 ${os.servico}</p>
+    <p>💼 Mão de Obra: R$ ${os.valor_mao_obra} | Peças: R$ ${os.valor_pecas}</p>
+    <p>💰 Total: R$ ${os.valor_total}</p>
+  </div>
 
-<p>
-Placa: ${os.placa}
-</p>
-
-<p>
-Veículo: ${os.veiculo}
-</p>
-
-<p>
-Serviço: ${os.servico}
-</p>
-
-<p>
-Mão de Obra: R$ ${os.valor_mao_obra}
-</p>
-
-<p>
-Peças: R$ ${os.valor_pecas}
-</p>
-
-<p>
-Total: R$ ${os.valor_total}
-</p>
-
-<p style="
-font-weight:bold;
-color:${corStatus};
-">
-${os.status}
-</p>
-
-<button
-onclick="editarOS(${os.id})">
-✏️ Editar
-</button>
-
-<button
-onclick="finalizarOS(${os.id})">
-✅ Finalizar
-</button>
-
-<button
-onclick="excluirOS(${os.id})">
-🗑️ Excluir
-</button>
-
-<button
-onclick="gerarPDFIndividual(${os.id})">
-📄 PDF
-</button>
+  <div class="os-actions">
+    <button onclick="editarOS(${os.id})">✏️ Editar</button>
+    <button onclick="finalizarOS(${os.id})">✅ Finalizar</button>
+    <button onclick="excluirOS(${os.id})">🗑️ Excluir</button>
+    <button onclick="gerarPDFIndividual(${os.id})">📄 PDF</button>
+  </div>
 
 </div>
-
 `;
 
 });
