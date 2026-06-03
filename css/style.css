@@ -408,3 +408,14 @@ body{
     color:#16a34a;
     font-weight:700;
 }
+.logo-sidebar{
+
+    width:120px;
+
+    display:block;
+
+    margin:0 auto 20px auto;
+
+    border-radius:12px;
+
+}
