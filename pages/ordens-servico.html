@@ -1,5 +1,5 @@
+```html
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
@@ -22,26 +22,13 @@
 <p id="usuario-logado"></p>
 
 <a href="../index.html">Dashboard</a>
-
 <a href="clientes.html">Clientes</a>
-
 <a href="pneus.html">Pneus</a>
-
 <a href="servicos.html">Serviços</a>
-
 <a href="vendas.html">Vendas</a>
-
-<a href="ordens-servico.html">
-Ordens de Serviço
-</a>
-
-<a href="caixa.html">
-Caixa
-</a>
-
-<a href="agendamentos.html">
-Agendamentos
-</a>
+<a href="ordens-servico.html">Ordens de Serviço</a>
+<a href="caixa.html">Caixa</a>
+<a href="agendamentos.html">Agendamentos</a>
 
 <button id="btn-sair">
 Sair
@@ -96,6 +83,18 @@ placeholder="Serviço Executado">
 <br><br>
 
 <input
+id="valor_mao_obra"
+placeholder="Valor Mão de Obra">
+
+<br><br>
+
+<input
+id="valor_pecas"
+placeholder="Valor Peças">
+
+<br><br>
+
+<input
 id="valor_total"
 placeholder="Valor Total">
 
@@ -103,21 +102,10 @@ placeholder="Valor Total">
 
 <select id="status">
 
-<option>
-ABERTA
-</option>
-
-<option>
-EM ANDAMENTO
-</option>
-
-<option>
-AGUARDANDO PEÇAS
-</option>
-
-<option>
-FINALIZADA
-</option>
+<option>ABERTA</option>
+<option>EM ANDAMENTO</option>
+<option>AGUARDANDO PEÇAS</option>
+<option>FINALIZADA</option>
 
 </select>
 
@@ -131,15 +119,11 @@ placeholder="Observações">
 <br><br>
 
 <button onclick="salvarOS()">
-
 Salvar OS
-
 </button>
 
 <button onclick="gerarPDF()">
-
 Gerar PDF
-
 </button>
 
 <hr>
@@ -167,3 +151,4 @@ Ordens de Serviço
 </body>
 
 </html>
+```

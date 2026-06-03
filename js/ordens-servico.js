@@ -6,6 +6,36 @@ SUPABASE_ANON_KEY
 
 let osEditando = null;
 
+document.addEventListener(
+'DOMContentLoaded',
+()=>{
+calcularTotal();
+}
+);
+
+function calcularTotal(){
+
+const maoObra =
+Number(
+document.getElementById(
+'valor_mao_obra'
+)?.value || 0
+);
+
+const pecas =
+Number(
+document.getElementById(
+'valor_pecas'
+)?.value || 0
+);
+
+document.getElementById(
+'valor_total'
+).value =
+(maoObra + pecas).toFixed(2);
+
+}
+
 async function salvarOS(){
 
 try{
@@ -35,12 +65,23 @@ document.getElementById(
 'servico'
 ).value;
 
-const valor_total =
+const valor_mao_obra =
 Number(
 document.getElementById(
-'valor_total'
-).value
+'valor_mao_obra'
+).value || 0
 );
+
+const valor_pecas =
+Number(
+document.getElementById(
+'valor_pecas'
+).value || 0
+);
+
+const valor_total =
+valor_mao_obra +
+valor_pecas;
 
 const status =
 document.getElementById(
@@ -63,6 +104,8 @@ telefone,
 placa,
 veiculo,
 servico,
+valor_mao_obra,
+valor_pecas,
 valor_total,
 status,
 observacao
@@ -73,6 +116,8 @@ osEditando
 );
 
 if(error){
+
+console.log(error);
 
 alert(
 'Erro ao atualizar OS'
@@ -106,6 +151,8 @@ telefone,
 placa,
 veiculo,
 servico,
+valor_mao_obra,
+valor_pecas,
 valor_total,
 status,
 observacao
@@ -167,6 +214,14 @@ document.getElementById(
 ).value='';
 
 document.getElementById(
+'valor_mao_obra'
+).value='';
+
+document.getElementById(
+'valor_pecas'
+).value='';
+
+document.getElementById(
 'valor_total'
 ).value='';
 
@@ -209,18 +264,31 @@ lista.innerHTML='';
 
 data.forEach(os=>{
 
-let corStatus = 'black';
+let corStatus =
+'#000';
 
-if(os.status === 'ABERTA'){
-corStatus = '#ff9800';
+if(
+os.status === 'ABERTA'
+){
+corStatus='#ff9800';
 }
 
-if(os.status === 'EM ANDAMENTO'){
-corStatus = '#2196f3';
+if(
+os.status === 'EM ANDAMENTO'
+){
+corStatus='#2196f3';
 }
 
-if(os.status === 'FINALIZADA'){
-corStatus = '#4caf50';
+if(
+os.status === 'AGUARDANDO PEÇAS'
+){
+corStatus='#f44336';
+}
+
+if(
+os.status === 'FINALIZADA'
+){
+corStatus='#4caf50';
 }
 
 lista.innerHTML += `
@@ -252,7 +320,22 @@ lista.innerHTML += `
 </p>
 
 <p>
-💰 R$ ${Number(
+💼 Mão de Obra:
+R$ ${Number(
+os.valor_mao_obra || 0
+).toFixed(2)}
+</p>
+
+<p>
+🧰 Peças:
+R$ ${Number(
+os.valor_pecas || 0
+).toFixed(2)}
+</p>
+
+<p>
+💰 Total:
+R$ ${Number(
 os.valor_total || 0
 ).toFixed(2)}
 </p>
@@ -266,29 +349,23 @@ ${os.status}
 
 <button
 onclick="editarOS(${os.id})">
-✏️ Editar </button>
+✏️ Editar
+</button>
 
 <button
 onclick="finalizarOS(${os.id})">
-✅ Finalizar </button>
+✅ Finalizar
+</button>
 
 <button
 onclick="excluirOS(${os.id})">
-🗑️ Excluir </button>
+🗑️ Excluir
+</button>
 
 <button
-onclick="gerarPDFIndividual(
-'${os.cliente_nome || ''}',
-'${os.telefone || ''}',
-'${os.placa || ''}',
-'${os.veiculo || ''}',
-'${os.servico || ''}',
-'${os.valor_total || 0}',
-'${os.status || ''}',
-'${os.observacao || ''}',
-'${os.id}'
-)">
-📄 PDF </button>
+onclick="gerarPDFIndividual(${os.id})">
+📄 PDF
+</button>
 
 </div>
 
@@ -304,12 +381,12 @@ const { data } =
 await clienteSupabase
 .from('ordens_servico')
 .select('*')
-.eq('id', id)
+.eq('id',id)
 .single();
 
 if(!data) return;
 
-osEditando = id;
+osEditando=id;
 
 document.getElementById(
 'cliente_nome'
@@ -337,9 +414,19 @@ document.getElementById(
 data.servico || '';
 
 document.getElementById(
+'valor_mao_obra'
+).value =
+data.valor_mao_obra || 0;
+
+document.getElementById(
+'valor_pecas'
+).value =
+data.valor_pecas || 0;
+
+document.getElementById(
 'valor_total'
 ).value =
-data.valor_total || '';
+data.valor_total || 0;
 
 document.getElementById(
 'status'
@@ -368,7 +455,6 @@ if(
 return;
 }
 
-const { error } =
 await clienteSupabase
 .from('ordens_servico')
 .delete()
@@ -377,23 +463,12 @@ await clienteSupabase
 id
 );
 
-if(error){
-
-alert(
-'Erro ao excluir'
-);
-
-return;
-
-}
-
 carregarOS();
 
 }
 
 async function finalizarOS(id){
 
-const { error } =
 await clienteSupabase
 .from('ordens_servico')
 .update({
@@ -404,31 +479,20 @@ status:'FINALIZADA'
 id
 );
 
-if(error){
-
-alert(
-'Erro ao finalizar'
-);
-
-return;
-
-}
-
 carregarOS();
 
 }
 
-function gerarPDFIndividual(
-cliente,
-telefone,
-placa,
-veiculo,
-servico,
-valor,
-status,
-observacao,
-id
-){
+async function gerarPDFIndividual(id){
+
+const { data } =
+await clienteSupabase
+.from('ordens_servico')
+.select('*')
+.eq('id',id)
+.single();
+
+if(!data) return;
 
 const { jsPDF } =
 window.jspdf;
@@ -436,112 +500,90 @@ window.jspdf;
 const doc =
 new jsPDF();
 
-doc.setDrawColor(0);
-doc.rect(
-10,
-10,
-190,
-270
-);
-
 doc.setFontSize(18);
 
 doc.text(
 'BATALHÃO DOS PNEUS',
-55,
-25
+50,
+20
 );
 
 doc.setFontSize(12);
 
 doc.text(
-`OS Nº ${id}`,
+`OS Nº ${data.id}`,
 20,
 40
 );
 
 doc.text(
-`Cliente: ${cliente}`,
+`Cliente: ${data.cliente_nome}`,
 20,
-60
+55
 );
 
 doc.text(
-`Telefone: ${telefone}`,
+`Telefone: ${data.telefone}`,
 20,
-70
+65
 );
 
 doc.text(
-`Placa: ${placa}`,
+`Placa: ${data.placa}`,
 20,
-80
+75
 );
 
 doc.text(
-`Veículo: ${veiculo}`,
+`Veículo: ${data.veiculo}`,
 20,
-90
+85
 );
 
 doc.text(
-`Serviço: ${servico}`,
+`Serviço: ${data.servico}`,
 20,
-110
+100
 );
 
 doc.text(
-`Valor: R$ ${valor}`,
+`Mão de Obra: R$ ${data.valor_mao_obra}`,
 20,
-120
+115
 );
 
 doc.text(
-`Status: ${status}`,
+`Peças: R$ ${data.valor_pecas}`,
 20,
-130
+125
+);
+
+doc.text(
+`Total: R$ ${data.valor_total}`,
+20,
+135
+);
+
+doc.text(
+`Status: ${data.status}`,
+20,
+145
 );
 
 doc.text(
 'Observações:',
 20,
-150
+165
 );
 
 doc.text(
-observacao || '',
+data.observacao || '',
 20,
-160
-);
-
-doc.line(
-20,
-220,
-90,
-220
-);
-
-doc.text(
-'Assinatura Cliente',
-20,
-228
-);
-
-doc.line(
-110,
-220,
-180,
-220
-);
-
-doc.text(
-'Responsável',
-120,
-228
+175
 );
 
 doc.save(
-`OS-${id}.pdf`
+`OS-${data.id}.pdf`
 );
 
 }
@@ -549,9 +591,27 @@ doc.save(
 function gerarPDF(){
 
 alert(
-'Salve a OS primeiro para gerar PDF.'
+'Salve a OS primeiro.'
 );
 
 }
+
+document
+.getElementById(
+'valor_mao_obra'
+)
+?.addEventListener(
+'input',
+calcularTotal
+);
+
+document
+.getElementById(
+'valor_pecas'
+)
+?.addEventListener(
+'input',
+calcularTotal
+);
 
 carregarOS();
