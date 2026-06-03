@@ -368,7 +368,6 @@ await clienteSupabase
 
 const novaQtd =
 Number(data.quantidade)
------------------------
 
 Number(qtd);
 
