@@ -82,7 +82,7 @@ async function carregarOS() {
 
         lista.innerHTML += `
         <div class="card os-card">
-            <h3>📋 OS #${os.id}</h3>
+            <h3>📋 ORÇAMENTO #${os.id}</h3>
             <p>Telefone: ${os.telefone}</p>
             <p>Placa: ${os.placa}</p>
             <p>Veículo: ${os.veiculo}</p>
@@ -205,7 +205,7 @@ async function gerarPDFIndividual(id){
     doc.setFontSize(16);
 
     doc.text(
-        `ORDEM DE SERVIÇO Nº ${os.id}`,
+        `ORÇAMENTO Nº ${os.id}`,
         15,
         45
     );
