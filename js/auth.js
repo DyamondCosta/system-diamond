@@ -70,10 +70,34 @@ usuarioLogado &&
 usuario
 ) {
 
+let perfilExibicao =
+usuario.perfil;
+
+if(
+usuario.perfil === 'admin'
+){
+
+perfilExibicao =
+'Administrador';
+
+}
+
+if(
+usuario.perfil === 'gerente'
+){
+
+perfilExibicao =
+'Gerente de Loja';
+
+}
+
 usuarioLogado.innerHTML =
 
-`👤 ${usuario.nome}
-(${usuario.perfil})`;
+`
+👤 ${usuario.nome}
+<br>
+${perfilExibicao}
+`;
 
 }
 
@@ -151,6 +175,8 @@ menuUsuarios.style.display =
 
 }
 
+/* CARDS FINANCEIROS */
+
 const cardFinanceiro =
 document.getElementById(
 'card-financeiro'
@@ -159,6 +185,30 @@ document.getElementById(
 if(cardFinanceiro){
 
 cardFinanceiro.style.display =
+'none';
+
+}
+
+const cardFinanceiroOntem =
+document.getElementById(
+'card-financeiro-ontem'
+);
+
+if(cardFinanceiroOntem){
+
+cardFinanceiroOntem.style.display =
+'none';
+
+}
+
+const cardFinanceiroMes =
+document.getElementById(
+'card-financeiro-mes'
+);
+
+if(cardFinanceiroMes){
+
+cardFinanceiroMes.style.display =
 'none';
 
 }
