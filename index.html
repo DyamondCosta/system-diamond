@@ -15,7 +15,29 @@
 
 <div class="sidebar">
 
-<h2>🔧 LC Solutions</h2>
+<div style="text-align:center;">
+
+<img
+src="img/logo-batalhao.png"
+style="
+width:140px;
+margin-bottom:15px;
+border-radius:12px;
+">
+
+<h2>
+LC Solutions
+</h2>
+
+<p style="
+font-size:12px;
+opacity:.8;
+margin-bottom:20px;
+">
+Sistema do Cliente
+</p>
+
+</div>
 
 <p id="usuario-logado"></p>
 
@@ -123,7 +145,7 @@ Serviços Total
 
 </div>
 
-<div class="card">
+<div class="card" id="card-financeiro">
 
 <h2>
 Vendas Hoje
@@ -135,7 +157,7 @@ R$ 0,00
 
 </div>
 
-<div class="card">
+<div class="card" id="card-financeiro-ontem">
 
 <h2>
 Vendas Ontem
@@ -147,7 +169,7 @@ R$ 0,00
 
 </div>
 
-<div class="card">
+<div class="card" id="card-financeiro-mes">
 
 <h2>
 Faturamento do Mês
@@ -171,7 +193,10 @@ OS Abertas
 
 </div>
 
-<div class="card">
+<div
+class="card"
+onclick="window.location.href='pages/pneus.html'"
+style="cursor:pointer;">
 
 <h2>
 Estoque Baixo
