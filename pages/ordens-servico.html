@@ -16,9 +16,29 @@
 
 <div class="sidebar">
 
+<div style="text-align:center;">
+
 <img
 src="../img/logo-batalhao.jpeg"
 class="logo-sidebar">
+
+<h3 style="
+margin-top:10px;
+color:white;
+font-size:18px;
+">
+Batalhão dos Pneus
+</h3>
+
+<p style="
+font-size:12px;
+opacity:.8;
+margin-bottom:20px;
+">
+Sistema de Gestão
+</p>
+
+</div>
 
 <p id="usuario-logado"></p>
 
@@ -45,6 +65,10 @@ Sair
 📋 ORDENS DE SERVIÇO
 </h1>
 
+<p>
+Cadastro, acompanhamento e emissão de OS
+</p>
+
 </div>
 
 <div class="container">
@@ -55,72 +79,112 @@ Nova Ordem de Serviço
 
 <div class="os-form-container">
 
-  <div class="os-form-row">
-    <div class="os-form-group">
-      <input id="cliente_nome" placeholder="Nome do Cliente">
-    </div>
-    <div class="os-form-group">
-      <input id="telefone" placeholder="Telefone">
-    </div>
-  </div>
+<div class="os-form-row">
 
-  <div class="os-form-row">
-    <div class="os-form-group">
-      <input id="placa" placeholder="Placa">
-    </div>
-    <div class="os-form-group">
-      <input id="veiculo" placeholder="Veículo">
-    </div>
-  </div>
+<div class="os-form-group">
+<input
+id="cliente_nome"
+placeholder="Nome do Cliente">
+</div>
 
-  <div class="os-form-row">
-    <div class="os-form-group full-width">
-      <input id="servico" placeholder="Serviço Executado">
-    </div>
-  </div>
-
-  <div class="os-form-row">
-    <div class="os-form-group">
-      <input id="valor_mao_obra" placeholder="Valor Mão de Obra">
-    </div>
-    <div class="os-form-group">
-      <input id="valor_pecas" placeholder="Valor Peças">
-    </div>
-  </div>
-
-  <div class="os-form-row">
-    <div class="os-form-group">
-      <input id="valor_total" placeholder="Valor Total">
-    </div>
-    <div class="os-form-group">
-      <select id="status">
-        <option>ABERTA</option>
-        <option>EM ANDAMENTO</option>
-        <option>AGUARDANDO PEÇAS</option>
-        <option>FINALIZADA</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="os-form-row">
-    <div class="os-form-group full-width">
-      <textarea id="observacao" placeholder="Observações"></textarea>
-    </div>
-  </div>
+<div class="os-form-group">
+<input
+id="telefone"
+placeholder="Telefone">
+</div>
 
 </div>
 
-<br><br>
+<div class="os-form-row">
+
+<div class="os-form-group">
+<input
+id="placa"
+placeholder="Placa">
+</div>
+
+<div class="os-form-group">
+<input
+id="veiculo"
+placeholder="Veículo">
+</div>
+
+</div>
+
+<div class="os-form-row">
+
+<div class="os-form-group full-width">
+<input
+id="servico"
+placeholder="Serviço Executado">
+</div>
+
+</div>
+
+<div class="os-form-row">
+
+<div class="os-form-group">
+<input
+id="valor_mao_obra"
+placeholder="Valor Mão de Obra">
+</div>
+
+<div class="os-form-group">
+<input
+id="valor_pecas"
+placeholder="Valor Peças">
+</div>
+
+</div>
+
+<div class="os-form-row">
+
+<div class="os-form-group">
+<input
+id="valor_total"
+placeholder="Valor Total"
+readonly>
+</div>
+
+<div class="os-form-group">
+
+<select id="status">
+
+<option>ABERTA</option>
+<option>EM ANDAMENTO</option>
+<option>AGUARDANDO PEÇAS</option>
+<option>FINALIZADA</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="os-form-row">
+
+<div class="os-form-group full-width">
+
+<textarea
+id="observacao"
+placeholder="Observações">
+</textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
 
 <button onclick="salvarOS()">
 Salvar OS
 </button>
 
-<button onclick="gerarPDF()">
-Gerar PDF
-</button>
-
-<hr>
+<hr style="
+margin:30px 0;
+">
 
 <h2>
 Ordens de Serviço
@@ -145,4 +209,3 @@ Ordens de Serviço
 </body>
 
 </html>
-```
