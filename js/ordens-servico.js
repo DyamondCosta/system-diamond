@@ -420,7 +420,7 @@ async function gerarPDFIndividual(id){
     doc.setFontSize(9);
 
     doc.text(
-        'Batalhão dos Pneus - Sistema de Gestão',
+                     'Batalhão dos Pneus',
         65,
         285
     );
