@@ -12,6 +12,7 @@ const { data } =
 await clienteSupabase
 .from('pneus')
 .select('*')
+.eq('ativo', true)
 .order('marca');
 
 const select =
@@ -29,11 +30,8 @@ data.forEach(pneu=>{
 select.innerHTML +=
 `
 <option value="${pneu.id}">
-${pneu.marca}
-${pneu.modelo}
--
-Estoque:
-${pneu.quantidade}
+${pneu.marca} ${pneu.modelo}
+- Estoque: ${pneu.quantidade}
 </option>
 `;
 
@@ -127,6 +125,32 @@ new Date()
 .toISOString()
 .split('T')[0];
 
+const { data: caixaData, error: caixaErro } =
+await clienteSupabase
+.from('caixa')
+.insert([
+{
+tipo:'ENTRADA',
+descricao:`Venda - ${cliente}`,
+valor:valor_total,
+forma_pagamento
+}
+])
+.select()
+.single();
+
+if(caixaErro){
+
+console.log(caixaErro);
+
+alert(
+'Erro ao registrar no caixa'
+);
+
+return;
+
+}
+
 const { error } =
 await clienteSupabase
 .from('vendas')
@@ -134,12 +158,15 @@ await clienteSupabase
 {
 cliente,
 pneu_id,
+pneu_nome:
+`${pneu.marca} ${pneu.modelo}`,
 quantidade,
 valor_total,
 forma_pagamento,
 status:'FINALIZADA',
 observacao,
-data_venda:hoje
+data_venda:hoje,
+caixa_id:caixaData.id
 }
 ]);
 
@@ -164,18 +191,6 @@ quantidade:novaQuantidade
 'id',
 pneu_id
 );
-
-await clienteSupabase
-.from('caixa')
-.insert([
-{
-tipo:'ENTRADA',
-descricao:
-`Venda - ${cliente}`,
-valor:valor_total,
-forma_pagamento
-}
-]);
 
 alert(
 'Venda registrada com sucesso'
@@ -252,13 +267,20 @@ ${venda.cliente}
 </h3>
 
 <p>
+Pneu:
+${venda.pneu_nome || ''}
+</p>
+
+<p>
 Quantidade:
 ${venda.quantidade || 0}
 </p>
 
 <p>
 Valor:
-R$ ${venda.valor_total}
+R$ ${Number(
+venda.valor_total || 0
+).toFixed(2)}
 </p>
 
 <p>
@@ -316,6 +338,60 @@ if(
 return;
 }
 
+const { data: venda } =
+await clienteSupabase
+.from('vendas')
+.select('*')
+.eq('id', id)
+.single();
+
+if(!venda){
+return;
+}
+
+if(venda.pneu_id){
+
+const { data: pneu } =
+await clienteSupabase
+.from('pneus')
+.select('quantidade')
+.eq(
+'id',
+venda.pneu_id
+)
+.single();
+
+if(pneu){
+
+await clienteSupabase
+.from('pneus')
+.update({
+quantidade:
+Number(pneu.quantidade)
++
+Number(venda.quantidade)
+})
+.eq(
+'id',
+venda.pneu_id
+);
+
+}
+
+}
+
+if(venda.caixa_id){
+
+await clienteSupabase
+.from('caixa')
+.delete()
+.eq(
+'id',
+venda.caixa_id
+);
+
+}
+
 const { error } =
 await clienteSupabase
 .from('vendas')
@@ -328,10 +404,20 @@ id
 if(error){
 
 console.log(error);
+
+alert(
+'Erro ao excluir venda'
+);
+
 return;
 
 }
 
+alert(
+'Venda excluída'
+);
+
+carregarPneus();
 carregarVendas();
 
 }
