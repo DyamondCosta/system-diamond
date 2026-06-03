@@ -4,6 +4,7 @@ const clienteSupabase = window.supabase.createClient(
 );
 
 let clientesCarregados = [];
+let clienteEditando = null;
 
 async function salvarCliente() {
 
@@ -19,19 +20,57 @@ async function salvarCliente() {
     const observacao =
     document.getElementById('observacao').value;
 
+    if(clienteEditando){
+
+        const { error } =
+        await clienteSupabase
+        .from('clientes')
+        .update({
+            nome,
+            telefone,
+            placa,
+            observacao
+        })
+        .eq('id', clienteEditando);
+
+        if(error){
+
+            console.log(error);
+
+            alert(
+                'Erro ao atualizar cliente'
+            );
+
+            return;
+
+        }
+
+        alert(
+            'Cliente atualizado com sucesso'
+        );
+
+        clienteEditando = null;
+
+        limparCampos();
+
+        carregarClientes();
+
+        return;
+    }
+
     const { error } =
     await clienteSupabase
-        .from('clientes')
-        .insert([
-            {
-                nome,
-                telefone,
-                placa,
-                observacao
-            }
-        ]);
+    .from('clientes')
+    .insert([
+        {
+            nome,
+            telefone,
+            placa,
+            observacao
+        }
+    ]);
 
-    if (error) {
+    if(error){
 
         console.log(error);
 
@@ -47,29 +86,34 @@ async function salvarCliente() {
         'Cliente salvo com sucesso'
     );
 
-    document.getElementById('nome').value = '';
-    document.getElementById('telefone').value = '';
-    document.getElementById('placa').value = '';
-    document.getElementById('observacao').value = '';
+    limparCampos();
 
     carregarClientes();
 
 }
 
-async function carregarClientes() {
+function limparCampos(){
+
+    document.getElementById('nome').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('placa').value = '';
+    document.getElementById('observacao').value = '';
+
+}
+
+async function carregarClientes(){
 
     const { data, error } =
     await clienteSupabase
-        .from('clientes')
-        .select('*')
-        .order('id', {
-            ascending: false
-        });
+    .from('clientes')
+    .select('*')
+    .order('id',{
+        ascending:false
+    });
 
-    if (error) {
+    if(error){
 
         console.log(error);
-
         return;
 
     }
@@ -77,85 +121,171 @@ async function carregarClientes() {
     clientesCarregados = data;
 
     renderizarClientes(
-        clientesCarregados
+        data
     );
 
 }
 
-function renderizarClientes(
-    listaClientes
-) {
+function renderizarClientes(listaClientes){
 
     const lista =
     document.getElementById(
         'lista-clientes'
     );
 
-    if (!lista) return;
+    if(!lista) return;
 
-    lista.innerHTML = '';
+    lista.innerHTML = `
 
-    listaClientes.forEach(
-        cliente => {
+    <table style="
+        width:100%;
+        background:white;
+        border-radius:12px;
+        overflow:hidden;
+        border-collapse:collapse;
+    ">
 
-            lista.innerHTML += `
-                <div class="card">
+        <thead>
 
-                    <h3>
-                        ${cliente.nome}
-                    </h3>
+            <tr style="
+                background:#0f172a;
+                color:white;
+            ">
 
-                    <p>
-                        📞 ${cliente.telefone || ''}
-                    </p>
+                <th style="padding:12px;">
+                    Nome
+                </th>
 
-                    <p>
-                        🚗 ${cliente.placa || ''}
-                    </p>
+                <th style="padding:12px;">
+                    Telefone
+                </th>
 
-                    <p>
-                        ${cliente.observacao || ''}
-                    </p>
+                <th style="padding:12px;">
+                    Placa
+                </th>
 
-                    <button
-                        onclick="excluirCliente(${cliente.id})"
-                    >
-                        Excluir
-                    </button>
+                <th style="padding:12px;">
+                    Ações
+                </th>
 
-                </div>
-            `;
+            </tr>
 
-        }
+        </thead>
+
+        <tbody id="tbody-clientes">
+
+        </tbody>
+
+    </table>
+
+    `;
+
+    const tbody =
+    document.getElementById(
+        'tbody-clientes'
     );
+
+    listaClientes.forEach(cliente=>{
+
+        tbody.innerHTML += `
+
+        <tr style="
+            border-bottom:1px solid #e5e7eb;
+        ">
+
+            <td style="padding:12px;">
+                ${cliente.nome || ''}
+            </td>
+
+            <td style="padding:12px;">
+                ${cliente.telefone || ''}
+            </td>
+
+            <td style="padding:12px;">
+                ${cliente.placa || ''}
+            </td>
+
+            <td style="padding:12px;">
+
+                <button
+                onclick="editarCliente(${cliente.id})">
+                Editar
+                </button>
+
+                <button
+                onclick="excluirCliente(${cliente.id})">
+                Excluir
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
 
 }
 
-function filtrarClientes() {
+async function editarCliente(id){
+
+    const { data } =
+    await clienteSupabase
+    .from('clientes')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+    if(!data) return;
+
+    clienteEditando = id;
+
+    document.getElementById('nome').value =
+    data.nome || '';
+
+    document.getElementById('telefone').value =
+    data.telefone || '';
+
+    document.getElementById('placa').value =
+    data.placa || '';
+
+    document.getElementById('observacao').value =
+    data.observacao || '';
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+}
+
+function filtrarClientes(){
 
     const texto =
     document
-        .getElementById('pesquisa')
-        .value
-        .toLowerCase();
+    .getElementById('pesquisa')
+    .value
+    .toLowerCase();
 
     const filtrados =
-    clientesCarregados.filter(
-        cliente => {
+    clientesCarregados.filter(cliente =>
 
-            return (
-                (cliente.nome || '')
-                .toLowerCase()
-                .includes(texto)
+        (cliente.nome || '')
+        .toLowerCase()
+        .includes(texto)
 
-                ||
+        ||
 
-                (cliente.placa || '')
-                .toLowerCase()
-                .includes(texto)
-            );
+        (cliente.placa || '')
+        .toLowerCase()
+        .includes(texto)
 
-        }
+        ||
+
+        (cliente.telefone || '')
+        .toLowerCase()
+        .includes(texto)
+
     );
 
     renderizarClientes(
@@ -164,24 +294,22 @@ function filtrarClientes() {
 
 }
 
-async function excluirCliente(
-    id
-) {
+async function excluirCliente(id){
 
     const confirmar =
     confirm(
         'Deseja excluir este cliente?'
     );
 
-    if (!confirmar) return;
+    if(!confirmar) return;
 
     const { error } =
     await clienteSupabase
-        .from('clientes')
-        .delete()
-        .eq('id', id);
+    .from('clientes')
+    .delete()
+    .eq('id', id);
 
-    if (error) {
+    if(error){
 
         console.log(error);
 
