@@ -1,12 +1,16 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Vendas</title>
 
 <link rel="stylesheet" href="../css/style.css">
+
 </head>
 
 <body>
@@ -17,11 +21,7 @@
 
 <p id="usuario-logado"></p>
 
-<a href="../index.html">Dashboard</a>
-<a href="clientes.html">Clientes</a>
-<a href="pneus.html">Pneus</a>
-<a href="servicos.html">Serviços</a>
-<a href="vendas.html">Vendas</a>
+<a href="../index.html">Dashboard</a> <a href="clientes.html">Clientes</a> <a href="pneus.html">Pneus</a> <a href="servicos.html">Serviços</a> <a href="vendas.html">Vendas</a>
 
 <br>
 
@@ -34,12 +34,18 @@ Sair
 <div class="main">
 
 <div class="header">
-<h1>VENDAS</h1>
+
+<h1>
+💰 VENDAS
+</h1>
+
 </div>
 
 <div class="container">
 
-<h2>Nova Venda</h2>
+<h2>
+Nova Venda
+</h2>
 
 <input
 id="cliente"
@@ -47,18 +53,47 @@ placeholder="Cliente">
 
 <br><br>
 
+<select id="pneu_id">
+
+<option value="">
+Selecione o Pneu
+</option>
+
+</select>
+
+<br><br>
+
+<input
+id="quantidade"
+type="number"
+placeholder="Quantidade">
+
+<br><br>
+
 <input
 id="valor_total"
+type="number"
 placeholder="Valor Total">
 
 <br><br>
 
 <select id="forma_pagamento">
 
-<option>PIX</option>
-<option>Dinheiro</option>
-<option>Cartão Débito</option>
-<option>Cartão Crédito</option>
+<option>
+PIX
+</option>
+
+<option>
+Dinheiro
+</option>
+
+<option>
+Cartão Débito
+</option>
+
+<option>
+Cartão Crédito
+</option>
 
 </select>
 
@@ -66,17 +101,22 @@ placeholder="Valor Total">
 
 <textarea
 id="observacao"
-placeholder="Observação"></textarea>
+placeholder="Observação">
+</textarea>
 
 <br><br>
 
 <button onclick="salvarVenda()">
+
 Salvar Venda
+
 </button>
 
 <hr>
 
-<h2>Histórico de Vendas</h2>
+<h2>
+Histórico de Vendas
+</h2>
 
 <input
 id="pesquisa"
@@ -92,8 +132,11 @@ onkeyup="filtrarVendas()">
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="../js/config.js"></script>
+
 <script src="../js/auth.js"></script>
+
 <script src="../js/vendas.js"></script>
 
 </body>
