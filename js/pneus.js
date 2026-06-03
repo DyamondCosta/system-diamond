@@ -170,67 +170,104 @@ lista.innerHTML += `
 
 <div class="card">
 
-<h3>
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+">
+
+<div>
+
+<h3 style="
+margin:0;
+font-size:20px;
+">
 ${pneu.marca} ${pneu.modelo}
 </h3>
 
-<p>
-📏 ${pneu.medida}
-</p>
+<div style="
+color:#64748b;
+font-size:14px;
+margin-top:4px;
+">
+${pneu.medida || '-'} • ${pneu.tipo || '-'}
+</div>
 
-<p>
-🏷️ ${pneu.tipo}
-</p>
+</div>
 
-<p>
-💰 Compra:
+<div style="
+font-size:18px;
+font-weight:bold;
+color:${estoqueBaixo ? '#dc2626' : '#16a34a'};
+">
+${pneu.quantidade} un.
+</div>
+
+</div>
+
+<div style="
+display:flex;
+gap:30px;
+margin-bottom:12px;
+font-size:15px;
+">
+
+<div>
+Compra:
+<b>
 R$ ${Number(
 pneu.preco_compra || 0
 ).toFixed(2)}
-</p>
+</b>
+</div>
 
-<p>
-💵 Venda:
+<div>
+Venda:
+<b>
 R$ ${Number(
 pneu.preco_venda || 0
 ).toFixed(2)}
-</p>
+</b>
+</div>
 
-<p>
-📦 Estoque:
-${pneu.quantidade}
-</p>
+</div>
 
-<p style="
-color:${estoqueBaixo ? 'red' : 'green'};
-font-weight:bold;
+<div style="
+margin-bottom:15px;
+font-weight:600;
+color:${estoqueBaixo ? '#dc2626' : '#16a34a'};
 ">
 
 ${estoqueBaixo
-? '⚠ ESTOQUE BAIXO'
-: '✔ ESTOQUE OK'}
+? 'ESTOQUE BAIXO'
+: 'ESTOQUE OK'}
 
-</p>
+</div>
+
+<div style="
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+">
 
 <button
 onclick="editarPneu(${pneu.id})">
-✏️ Editar
-</button>
+Editar </button>
 
 <button
 onclick="entradaEstoque(${pneu.id})">
-➕ Entrada
-</button>
+Entrada </button>
 
 <button
 onclick="saidaEstoque(${pneu.id})">
-➖ Saída
-</button>
+Saída </button>
 
 <button
 onclick="excluirPneu(${pneu.id})">
-🗑️ Inativar
-</button>
+Inativar </button>
+
+</div>
 
 </div>
 
@@ -331,7 +368,8 @@ await clienteSupabase
 
 const novaQtd =
 Number(data.quantidade)
--
+-----------------------
+
 Number(qtd);
 
 if(novaQtd < 0){
