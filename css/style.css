@@ -366,4 +366,45 @@ body{
 
 }
 
+}.os-card{
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    border-left:5px solid #2563eb;
+
+}
+
+.os-card h3{
+
+    font-size:22px;
+
+    margin-bottom:10px;
+
+}
+
+.os-card p{
+
+    font-size:15px;
+
+    margin:4px 0;
+
+    font-weight:500;
+
+}
+
+.status-aberta{
+    color:#f59e0b;
+    font-weight:700;
+}
+
+.status-andamento{
+    color:#2563eb;
+    font-weight:700;
+}
+
+.status-finalizada{
+    color:#16a34a;
+    font-weight:700;
 }

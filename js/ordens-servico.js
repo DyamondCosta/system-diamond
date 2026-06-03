@@ -293,51 +293,38 @@ corStatus='#4caf50';
 
 lista.innerHTML += `
 
-<div class="card">
+<div class="card os-card">
 
 <h3>
 📋 OS #${os.id}
 </h3>
 
 <p>
-👤 ${os.cliente_nome || ''}
+Telefone: ${os.telefone}
 </p>
 
 <p>
-📞 ${os.telefone || ''}
+Placa: ${os.placa}
 </p>
 
 <p>
-🚗 ${os.placa || ''}
+Veículo: ${os.veiculo}
 </p>
 
 <p>
-🚘 ${os.veiculo || ''}
+Serviço: ${os.servico}
 </p>
 
 <p>
-🔧 ${os.servico || ''}
+Mão de Obra: R$ ${os.valor_mao_obra}
 </p>
 
 <p>
-💼 Mão de Obra:
-R$ ${Number(
-os.valor_mao_obra || 0
-).toFixed(2)}
+Peças: R$ ${os.valor_pecas}
 </p>
 
 <p>
-🧰 Peças:
-R$ ${Number(
-os.valor_pecas || 0
-).toFixed(2)}
-</p>
-
-<p>
-💰 Total:
-R$ ${Number(
-os.valor_total || 0
-).toFixed(2)}
+Total: R$ ${os.valor_total}
 </p>
 
 <p style="
