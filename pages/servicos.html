@@ -1,79 +1,87 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serviços</title>
-<link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços</title>
+
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
 
-<div class="sidebar"></div>
+    <div class="sidebar">
 
-<div class="main">
-<div class="header">
-    <h1>🔧 SERVIÇOS</h1>
-    <p>Cadastro e gestão de serviços da oficina</p>
-</div>
+        <h2>🛞 Batalhão</h2>
 
-<div class="container">
+        <p id="usuario-logado"></p>
 
-    <h2 id="titulo-form">Novo Serviço</h2>
+        <a href="../index.html">Dashboard</a>
+        <a href="clientes.html">Clientes</a>
+        <a href="pneus.html">Pneus</a>
+        <a href="servicos.html">Serviços</a>
 
-    <div class="os-form-container">
+        <br>
 
-        <div class="os-form-row">
-            <div class="os-form-group full-width">
-                <input id="nome" placeholder="Nome do Serviço">
-            </div>
+        <button id="btn-sair">
+            Sair
+        </button>
+
+    </div>
+
+    <div class="main">
+
+        <div class="header">
+            <h1>SERVIÇOS</h1>
         </div>
 
-        <div class="os-form-row">
-            <div class="os-form-group">
-                <select id="categoria">
-                    <option value="">Selecione a Categoria</option>
-                    <option value="Pneus">Pneus</option>
-                    <option value="Alinhamento">Alinhamento</option>
-                    <option value="Balanceamento">Balanceamento</option>
-                    <option value="Suspensão">Suspensão</option>
-                    <option value="Freios">Freios</option>
-                    <option value="Manutenção Geral">Manutenção Geral</option>
-                    <option value="Outros">Outros</option>
-                </select>
-            </div>
-            <div class="os-form-group">
-                <input id="valor" type="number" placeholder="Valor (R$)">
-            </div>
-        </div>
+        <div class="container">
 
-        <div class="os-form-row">
-            <div class="os-form-group">
-                <input id="tempo_estimado" placeholder="Tempo Estimado (ex: 30 min)">
-            </div>
-            <div class="os-form-group">
-                <textarea id="descricao" placeholder="Descrição do serviço (opcional)"></textarea>
-            </div>
+            <h2>Novo Serviço</h2>
+
+            <input id="nome" placeholder="Nome do Serviço">
+
+            <br><br>
+
+            <input id="categoria" placeholder="Categoria">
+
+            <br><br>
+
+            <input id="valor" placeholder="Valor">
+
+            <br><br>
+
+            <input id="tempo_estimado" placeholder="Tempo Estimado">
+
+            <br><br>
+
+            <button onclick="salvarServico()">
+                Salvar Serviço
+            </button>
+
+            <hr>
+
+            <h2>Serviços Cadastrados</h2>
+
+            <input
+                id="pesquisa"
+                placeholder="Pesquisar serviço"
+                onkeyup="filtrarServicos()">
+
+            <br><br>
+
+            <div id="lista-servicos"></div>
+
         </div>
 
     </div>
 
-    <br>
-    <button id="btn-salvar" onclick="salvarServico()">💾 Salvar Serviço</button>
-    <button id="btn-cancelar" onclick="cancelarEdicao()" style="display:none;background:#6b7280;margin-left:10px;">❌ Cancelar</button>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/servicos.js"></script>
 
-    <hr>
-
-    <h2>Serviços Cadastrados</h2>
-    <input id="pesquisa" placeholder="🔍 Pesquisar serviço..." onkeyup="filtrarServicos()">
-    <br><br>
-    <div id="lista-servicos"></div>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/config.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/servicos.js"></script>
 </body>
+
 </html>
