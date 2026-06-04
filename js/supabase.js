@@ -27,6 +27,10 @@ async function carregarDashboard() {
             .filter(item => item.tipo === 'ENTRADA' && item.data_movimento >= primeiroDiaMes)
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
+        const saidasMes = (caixa || [])
+            .filter(item => item.tipo === 'SAIDA' && item.data_movimento >= primeiroDiaMes)
+            .reduce((total, item) => total + Number(item.valor || 0), 0);
+
         // LUCRO REAL DE HOJE
         const { data: vendasHoje } = await clienteSupabase
             .from('vendas')
@@ -34,6 +38,15 @@ async function carregarDashboard() {
             .eq('data_venda', hojeStr);
 
         const lucroHoje = (vendasHoje || [])
+            .reduce((total, v) => total + Number(v.lucro || 0), 0);
+
+        // LUCRO DO MÊS
+        const { data: vendasMes } = await clienteSupabase
+            .from('vendas')
+            .select('lucro')
+            .gte('data_venda', primeiroDiaMes);
+
+        const lucroMes = (vendasMes || [])
             .reduce((total, v) => total + Number(v.lucro || 0), 0);
 
         // SERVIÇOS
@@ -76,6 +89,8 @@ async function carregarDashboard() {
         document.getElementById('lucro-hoje').textContent = `R$ ${lucroHoje.toFixed(2)}`;
         document.getElementById('saldo-hoje').textContent = `R$ ${saldoHoje.toFixed(2)}`;
         document.getElementById('faturamento-mes').textContent = `R$ ${faturamentoMes.toFixed(2)}`;
+        document.getElementById('saidas-mes').textContent = `R$ ${saidasMes.toFixed(2)}`;
+        document.getElementById('lucro-mes').textContent = `R$ ${lucroMes.toFixed(2)}`;
         document.getElementById('servicos-hoje').textContent = servicosTotal || 0;
         document.getElementById('os-abertas').textContent = osAbertas || 0;
         document.getElementById('estoque-baixo').textContent = estoqueBaixo || 0;
