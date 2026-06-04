@@ -5,6 +5,12 @@ const clienteSupabase = window.supabase.createClient(
 
 let osEditando = null;
 
+function calcularTotal() {
+    const maoObra = Number(document.getElementById('valor_mao_obra').value) || 0;
+    const pecas = Number(document.getElementById('valor_pecas').value) || 0;
+    document.getElementById('valor_total').value = (maoObra + pecas).toFixed(2);
+}
+
 async function salvarOS() {
     const cliente_nome = document.getElementById('cliente_nome').value;
     const telefone = document.getElementById('telefone').value;
@@ -128,7 +134,6 @@ async function excluirOS(id){
     carregarOS();
 }
 
-/* GERAR PDF COM LOGO */
 function carregarImagemBase64(url) {
     return new Promise((resolve) => {
         const img = new Image();
@@ -142,7 +147,7 @@ function carregarImagemBase64(url) {
             resolve(canvas.toDataURL('image/jpeg'));
         };
         img.onerror = function() {
-            resolve(null); // se falhar, segue sem logo
+            resolve(null);
         };
         img.src = url;
     });
@@ -171,7 +176,7 @@ async function gerarPDFIndividual(id){
         doc.addImage(logoBase64, 'JPEG', 12, 3, 28, 28);
     }
 
-    /* NOME DA EMPRESA ao lado da logo */
+    /* NOME DA EMPRESA */
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
     doc.text('BATALHÃO DOS PNEUS', 46, 16);
