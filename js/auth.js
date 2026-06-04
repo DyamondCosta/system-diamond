@@ -23,12 +23,15 @@ document.addEventListener('keypress', reiniciarTimer);
 document.addEventListener('click', reiniciarTimer);
 reiniciarTimer();
 
-// PERFIL DO USUÁRIO
-const ehAdmin = usuario.perfil === 'admin' || usuario.nome === 'Lucas';
-const ehGerente = usuario.perfil === 'gerente';
-const temAcessoFinanceiro = ehAdmin || ehGerente;
+// PERFIL — aceita maiúsculo e minúsculo
+const perfilRaw = (usuario.perfil || '').toLowerCase().trim();
+const ehAdmin = perfilRaw === 'admin' || perfilRaw === 'administrador';
+const ehGerente = perfilRaw === 'gerente';
+const temAcessoTotal = ehAdmin || ehGerente;
 
-// MONTA O MENU LATERAL AUTOMATICAMENTE EM TODAS AS PÁGINAS
+// LABEL DO PERFIL — mostra exatamente o que está cadastrado
+const perfilExibicao = usuario.perfil || 'Funcionário';
+
 function montarMenu() {
     const sidebar = document.querySelector('.sidebar');
     if (!sidebar) return;
@@ -49,9 +52,7 @@ function montarMenu() {
 
     <div style="padding:8px 15px;margin-bottom:10px;background:rgba(255,255,255,0.08);border-radius:8px;">
         <p style="color:white;font-size:13px;margin:0;">👤 ${usuario.nome}</p>
-        <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:2px 0 0;">${
-            ehAdmin ? 'Administrador' : ehGerente ? 'Gerente' : 'Funcionário'
-        }</p>
+        <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:2px 0 0;">${perfilExibicao}</p>
     </div>
 
     <a href="${caminhoBase}index.html" ${linkAtivo('index.html')}>🏠 Dashboard</a>
@@ -63,41 +64,33 @@ function montarMenu() {
     <a href="${caminhoBase}pages/agendamentos.html" ${linkAtivo('agendamentos.html')}>📅 Agendamentos</a>
     `;
 
-    if (temAcessoFinanceiro) {
+    if (temAcessoTotal) {
         menuHTML += `
     <a href="${caminhoBase}pages/caixa.html" ${linkAtivo('caixa.html')}>💵 Caixa</a>
     <a href="${caminhoBase}pages/extrato.html" ${linkAtivo('extrato.html')}>📊 Extrato</a>
-        `;
-    }
-
-    if (ehAdmin) {
-        menuHTML += `
     <a href="${caminhoBase}pages/usuarios.html" ${linkAtivo('usuarios.html')}>⚙️ Usuários</a>
         `;
     }
 
-    menuHTML += `
-    <br>
-    <button id="btn-sair">Sair</button>
-    `;
+    menuHTML += `<br><button id="btn-sair">Sair</button>`;
 
     sidebar.innerHTML = menuHTML;
 
-    // BOTÃO SAIR
     document.getElementById('btn-sair').addEventListener('click', () => {
         localStorage.removeItem('usuarioLogado');
         window.location.href = caminhoLogin;
     });
 
     // ESCONDE CARDS FINANCEIROS PARA FUNCIONÁRIO
-    if (!temAcessoFinanceiro) {
-        const ids = ['card-financeiro-mes', 'saidas-hoje', 'lucro-hoje', 'faturamento-mes'];
-        ids.forEach(id => {
-            const el = document.getElementById(id);
-            if (el && el.parentElement) el.parentElement.style.display = 'none';
-        });
+    if (!temAcessoTotal) {
+        setTimeout(() => {
+            ['card-financeiro-mes', 'saidas-hoje', 'lucro-hoje', 'faturamento-mes', 'vendas-hoje']
+            .forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.parentElement) el.parentElement.style.display = 'none';
+            });
+        }, 200);
     }
 }
 
-// Executa quando a página carregar
 document.addEventListener('DOMContentLoaded', montarMenu);
