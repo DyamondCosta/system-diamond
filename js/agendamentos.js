@@ -2,6 +2,7 @@ const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON
 
 let agendamentosCarregados = [];
 let filtroAtual = 'TODOS';
+let agendamentoEditando = null;
 
 async function carregarServicosSelect() {
     const { data } = await clienteSupabase
@@ -35,13 +36,29 @@ async function salvarAgendamento() {
     if (!hora_agendamento) { alert('Informe o horário'); return; }
     if (!servico) { alert('Informe o serviço'); return; }
 
-    const { error } = await clienteSupabase
-        .from('agendamentos')
-        .insert([{ cliente, telefone, data_agendamento, hora_agendamento, servico, status: 'PENDENTE' }]);
+    if (agendamentoEditando) {
+        const { error } = await clienteSupabase
+            .from('agendamentos')
+            .update({ cliente, telefone, data_agendamento, hora_agendamento, servico })
+            .eq('id', agendamentoEditando);
 
-    if (error) { alert('Erro ao salvar'); return; }
+        if (error) { alert('Erro ao atualizar'); return; }
 
-    alert('✅ Agendamento criado!');
+        alert('✅ Agendamento atualizado!');
+        agendamentoEditando = null;
+        document.getElementById('titulo-form').textContent = 'Novo Agendamento';
+        document.getElementById('btn-salvar').textContent = '💾 Salvar Agendamento';
+        document.getElementById('btn-cancelar').style.display = 'none';
+
+    } else {
+        const { error } = await clienteSupabase
+            .from('agendamentos')
+            .insert([{ cliente, telefone, data_agendamento, hora_agendamento, servico, status: 'PENDENTE' }]);
+
+        if (error) { alert('Erro ao salvar'); return; }
+        alert('✅ Agendamento criado!');
+    }
+
     limparCampos();
     carregarAgendamentos();
 }
@@ -51,6 +68,34 @@ function limparCampos() {
         document.getElementById(id).value = '';
     });
     document.getElementById('servico_select').selectedIndex = 0;
+}
+
+function cancelarEdicao() {
+    agendamentoEditando = null;
+    limparCampos();
+    document.getElementById('titulo-form').textContent = 'Novo Agendamento';
+    document.getElementById('btn-salvar').textContent = '💾 Salvar Agendamento';
+    document.getElementById('btn-cancelar').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function editarAgendamento(id) {
+    const item = agendamentosCarregados.find(a => a.id === id);
+    if (!item) return;
+
+    agendamentoEditando = id;
+
+    document.getElementById('cliente').value = item.cliente || '';
+    document.getElementById('telefone').value = item.telefone || '';
+    document.getElementById('data_agendamento').value = item.data_agendamento || '';
+    document.getElementById('hora_agendamento').value = item.hora_agendamento || '';
+    document.getElementById('servico').value = item.servico || '';
+
+    document.getElementById('titulo-form').textContent = '✏️ Editando Agendamento';
+    document.getElementById('btn-salvar').textContent = '💾 Salvar Alterações';
+    document.getElementById('btn-cancelar').style.display = 'inline-block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function carregarAgendamentos() {
@@ -118,6 +163,7 @@ function renderizarAgendamentos() {
             <p style="margin:8px 0 4px;">📅 ${dataFormatada} às ${horaFormatada}</p>
             <p style="margin:0 0 10px;">🔧 ${item.servico}</p>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="editarAgendamento(${item.id})" style="background:#8b5cf6;">✏️ Editar</button>
                 ${item.status !== 'CONFIRMADO' && item.status !== 'CONCLUIDO' && item.status !== 'CANCELADO' ? `
                 <button onclick="atualizarStatus(${item.id}, 'CONFIRMADO')" style="background:#3b82f6;">✅ Confirmar</button>` : ''}
                 ${item.status !== 'CONCLUIDO' && item.status !== 'CANCELADO' ? `
