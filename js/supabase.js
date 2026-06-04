@@ -4,6 +4,7 @@ async function carregarDashboard() {
     try {
 
         const hoje = new Date();
+        const hojeStr = hoje.toISOString().split('T')[0];
         const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1)
             .toISOString().split('T')[0];
 
@@ -12,17 +13,18 @@ async function carregarDashboard() {
             .from('caixa')
             .select('*');
 
-        const entradasTotal = (caixa || [])
-            .filter(item => item.tipo === 'ENTRADA')
+        // ENTRADAS E SAÍDAS DE HOJE
+        const entradasHoje = (caixa || [])
+            .filter(item => item.tipo === 'ENTRADA' && item.data_movimento === hojeStr)
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
-        const saidasTotal = (caixa || [])
-            .filter(item => item.tipo === 'SAIDA')
+        const saidasHoje = (caixa || [])
+            .filter(item => item.tipo === 'SAIDA' && item.data_movimento === hojeStr)
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
-        const saldo = entradasTotal - saidasTotal;
+        const saldoHoje = entradasHoje - saidasHoje;
 
-        // FATURAMENTO DO MÊS - entradas do caixa no mês atual
+        // FATURAMENTO DO MÊS
         const faturamentoMes = (caixa || [])
             .filter(item => item.tipo === 'ENTRADA' && item.data_movimento >= primeiroDiaMes)
             .reduce((total, item) => total + Number(item.valor || 0), 0);
@@ -60,9 +62,9 @@ async function carregarDashboard() {
         document.getElementById('estoque-baixo').textContent = estoqueBaixo || 0;
         document.getElementById('total-pneus').textContent = totalPneus || 0;
         document.getElementById('faturamento-mes').textContent = `R$ ${faturamentoMes.toFixed(2)}`;
-        document.getElementById('vendas-hoje').textContent = `R$ ${entradasTotal.toFixed(2)}`;
-        document.getElementById('saidas-hoje').textContent = `R$ ${saidasTotal.toFixed(2)}`;
-        document.getElementById('lucro-hoje').textContent = `R$ ${saldo.toFixed(2)}`;
+        document.getElementById('vendas-hoje').textContent = `R$ ${entradasHoje.toFixed(2)}`;
+        document.getElementById('saidas-hoje').textContent = `R$ ${saidasHoje.toFixed(2)}`;
+        document.getElementById('lucro-hoje').textContent = `R$ ${saldoHoje.toFixed(2)}`;
 
     } catch (erro) {
         console.error('Erro Dashboard:', erro);
