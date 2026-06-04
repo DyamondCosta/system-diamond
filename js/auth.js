@@ -1,89 +1,100 @@
-const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+// Não roda na página de login
+if (window.location.pathname.includes('login.html')) {
+    // para aqui
+} else {
 
-const estaEmPages = window.location.pathname.includes('/pages/');
-const caminhoLogin = estaEmPages ? '../login.html' : 'login.html';
-const caminhoBase = estaEmPages ? '../' : '';
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
 
-if (!usuario) {
-    window.location.href = caminhoLogin;
-}
+    const estaEmPages = window.location.pathname.includes('/pages/');
+    const caminhoLogin = estaEmPages ? '../login.html' : 'login.html';
+    const caminhoBase = estaEmPages ? '../' : '';
 
-const perfilRaw = (usuario.perfil || '').toLowerCase().trim();
-const temAcessoTotal =
-    perfilRaw === 'admin' ||
-    perfilRaw === 'administrador' ||
-    perfilRaw === 'gerente';
-
-function montarMenu() {
-    const sidebar = document.querySelector('.sidebar');
-    if (!sidebar) return;
-
-    const paginaAtual = window.location.pathname.split('/').pop();
-
-    function linkAtivo(arquivo) {
-        return paginaAtual === arquivo ? 'style="opacity:1;font-weight:bold;"' : '';
-    }
-
-    let menuHTML = `
-    <div style="text-align:center;padding:10px 0 5px;">
-        <img src="${caminhoBase}img/logo-batalhao.jpeg" style="width:120px;border-radius:12px;margin-bottom:10px;">
-        <h3 style="color:white;font-size:16px;margin:0;">Batalhão dos Pneus</h3>
-        <p style="font-size:11px;opacity:.7;margin:4px 0 15px;">Sistema de Gestão</p>
-    </div>
-    <div style="padding:8px 15px;margin-bottom:10px;background:rgba(255,255,255,0.08);border-radius:8px;">
-        <p style="color:white;font-size:13px;margin:0;">👤 ${usuario.nome}</p>
-        <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:2px 0 0;">${usuario.perfil}</p>
-    </div>
-    <a href="${caminhoBase}index.html" ${linkAtivo('index.html')}>🏠 Dashboard</a>
-    <a href="${caminhoBase}pages/clientes.html" ${linkAtivo('clientes.html')}>👥 Clientes</a>
-    <a href="${caminhoBase}pages/pneus.html" ${linkAtivo('pneus.html')}>🛞 Estoque</a>
-    <a href="${caminhoBase}pages/servicos.html" ${linkAtivo('servicos.html')}>🔧 Serviços</a>
-    <a href="${caminhoBase}pages/ordens-servico.html" ${linkAtivo('ordens-servico.html')}>📋 Orçamentos</a>
-    <a href="${caminhoBase}pages/vendas.html" ${linkAtivo('vendas.html')}>💰 Vendas</a>
-    <a href="${caminhoBase}pages/agendamentos.html" ${linkAtivo('agendamentos.html')}>📅 Agendamentos</a>`;
-
-    if (temAcessoTotal) {
-        menuHTML += `
-    <a href="${caminhoBase}pages/caixa.html" ${linkAtivo('caixa.html')}>💵 Caixa</a>
-    <a href="${caminhoBase}pages/extrato.html" ${linkAtivo('extrato.html')}>📊 Extrato</a>
-    <a href="${caminhoBase}pages/usuarios.html" ${linkAtivo('usuarios.html')}>⚙️ Usuários</a>`;
-    }
-
-    menuHTML += `<br><button id="btn-sair" style="
-        width:calc(100% - 30px);
-        margin:15px;
-        padding:12px;
-        background:#3b82f6;
-        color:white;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        font-size:14px;
-        font-weight:bold;">
-        🚪 Sair
-    </button>`;
-
-    sidebar.innerHTML = menuHTML;
-
-    document.getElementById('btn-sair').addEventListener('click', () => {
-        localStorage.removeItem('usuarioLogado');
+    if (!usuario) {
         window.location.href = caminhoLogin;
-    });
+    } else {
 
-    let tempoInatividade;
-    function reiniciarTimer() {
-        clearTimeout(tempoInatividade);
-        tempoInatividade = setTimeout(() => {
-            localStorage.removeItem('usuarioLogado');
-            alert('Sessão encerrada por inatividade');
-            window.location.href = caminhoLogin;
-        }, 600000);
+        const perfilRaw = (usuario.perfil || '').toLowerCase().trim();
+        const temAcessoTotal =
+            perfilRaw === 'admin' ||
+            perfilRaw === 'administrador' ||
+            perfilRaw === 'gerente';
+
+        function montarMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            if (!sidebar) return;
+
+            const paginaAtual = window.location.pathname.split('/').pop();
+
+            function linkAtivo(arquivo) {
+                return paginaAtual === arquivo ? 'style="opacity:1;font-weight:bold;"' : '';
+            }
+
+            let menuHTML = `
+            <div style="text-align:center;padding:10px 0 5px;">
+                <img src="${caminhoBase}img/logo-batalhao.jpeg" style="width:120px;border-radius:12px;margin-bottom:10px;">
+                <h3 style="color:white;font-size:16px;margin:0;">Batalhão dos Pneus</h3>
+                <p style="font-size:11px;opacity:.7;margin:4px 0 15px;">Sistema de Gestão</p>
+            </div>
+            <div style="padding:8px 15px;margin-bottom:10px;background:rgba(255,255,255,0.08);border-radius:8px;">
+                <p style="color:white;font-size:13px;margin:0;">👤 ${usuario.nome}</p>
+                <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:2px 0 0;">${usuario.perfil}</p>
+            </div>
+            <a href="${caminhoBase}index.html" ${linkAtivo('index.html')}>🏠 Dashboard</a>
+            <a href="${caminhoBase}pages/clientes.html" ${linkAtivo('clientes.html')}>👥 Clientes</a>
+            <a href="${caminhoBase}pages/pneus.html" ${linkAtivo('pneus.html')}>🛞 Estoque</a>
+            <a href="${caminhoBase}pages/servicos.html" ${linkAtivo('servicos.html')}>🔧 Serviços</a>
+            <a href="${caminhoBase}pages/ordens-servico.html" ${linkAtivo('ordens-servico.html')}>📋 Orçamentos</a>
+            <a href="${caminhoBase}pages/vendas.html" ${linkAtivo('vendas.html')}>💰 Vendas</a>
+            <a href="${caminhoBase}pages/agendamentos.html" ${linkAtivo('agendamentos.html')}>📅 Agendamentos</a>`;
+
+            if (temAcessoTotal) {
+                menuHTML += `
+            <a href="${caminhoBase}pages/caixa.html" ${linkAtivo('caixa.html')}>💵 Caixa</a>
+            <a href="${caminhoBase}pages/extrato.html" ${linkAtivo('extrato.html')}>📊 Extrato</a>
+            <a href="${caminhoBase}pages/usuarios.html" ${linkAtivo('usuarios.html')}>⚙️ Usuários</a>`;
+            }
+
+            menuHTML += `
+            <br>
+            <button id="btn-sair" style="width:calc(100% - 30px);margin:15px;padding:12px;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:bold;">
+                🚪 Sair
+            </button>`;
+
+            sidebar.innerHTML = menuHTML;
+
+            document.getElementById('btn-sair').addEventListener('click', () => {
+                localStorage.removeItem('usuarioLogado');
+                window.location.href = caminhoLogin;
+            });
+
+            // Timer de inatividade
+            let tempoInatividade;
+            function reiniciarTimer() {
+                clearTimeout(tempoInatividade);
+                tempoInatividade = setTimeout(() => {
+                    localStorage.removeItem('usuarioLogado');
+                    alert('Sessão encerrada por inatividade');
+                    window.location.href = caminhoLogin;
+                }, 600000);
+            }
+            document.addEventListener('mousemove', reiniciarTimer);
+            document.addEventListener('keypress', reiniciarTimer);
+            document.addEventListener('click', reiniciarTimer);
+            reiniciarTimer();
+
+            // Esconde cards financeiros para funcionário
+            if (!temAcessoTotal) {
+                setTimeout(() => {
+                    ['card-financeiro-mes', 'saidas-hoje', 'lucro-hoje',
+                     'faturamento-mes', 'vendas-hoje'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el && el.parentElement) el.parentElement.style.display = 'none';
+                    });
+                }, 200);
+            }
+        }
+
+        window.onload = montarMenu;
+
     }
-    document.addEventListener('mousemove', reiniciarTimer);
-    document.addEventListener('keypress', reiniciarTimer);
-    document.addEventListener('click', reiniciarTimer);
-    reiniciarTimer();
 }
-
-// Garante que o DOM está pronto antes de montar o menu
-window.onload = montarMenu;
