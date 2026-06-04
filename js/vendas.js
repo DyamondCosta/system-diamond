@@ -43,20 +43,22 @@ function preencherValorPneu() {
     const preco = Number(option.getAttribute('data-preco')) || 0;
     const qtd = Number(document.getElementById('quantidade').value) || 1;
     document.getElementById('valor_total').value = (preco * qtd).toFixed(2);
-    calcularTotalPneu();
+    atualizarLucroEstimado();
 }
 
 function calcularTotalPneu() {
+    atualizarLucroEstimado();
+}
+
+function atualizarLucroEstimado() {
     const select = document.getElementById('pneu_id');
     const option = select.options[select.selectedIndex];
-    const preco = Number(option.getAttribute('data-preco')) || 0;
     const custo = Number(option.getAttribute('data-custo')) || 0;
     const qtd = Number(document.getElementById('quantidade').value) || 0;
-    const total = preco * qtd;
-    const lucro = (preco - custo) * qtd;
-    document.getElementById('valor_total').value = total.toFixed(2);
+    const valorDigitado = Number(document.getElementById('valor_total').value) || 0;
+    const lucro = valorDigitado - (custo * qtd);
     document.getElementById('info-lucro').textContent =
-        qtd > 0 ? `💡 Lucro estimado: R$ ${lucro.toFixed(2)}` : '';
+        qtd > 0 && valorDigitado > 0 ? `💡 Lucro estimado: R$ ${lucro.toFixed(2)}` : '';
 }
 
 async function carregarServicos() {
@@ -116,7 +118,8 @@ async function salvarVendaPneu(cliente, forma_pagamento, observacao) {
         return;
     }
 
-    const lucro = (Number(pneu.preco_venda) - Number(pneu.preco_compra)) * quantidade;
+    // LUCRO = valor que você cobrou - custo de compra
+    const lucro = valor_total - (Number(pneu.preco_compra) * quantidade);
 
     const { data: caixaData, error: caixaErro } = await clienteSupabase
         .from('caixa')
