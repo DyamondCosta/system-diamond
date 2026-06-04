@@ -1,144 +1,108 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Vendas</title>
-
 <link rel="stylesheet" href="../css/style.css">
-
 </head>
-
 <body>
 
-<div class="sidebar">
-
-<h2>🛞 Batalhão</h2>
-
-<p id="usuario-logado"></p>
-
-<a href="../index.html">Dashboard</a> <a href="clientes.html">Clientes</a> <a href="pneus.html">Pneus</a> <a href="servicos.html">Serviços</a> <a href="vendas.html">Vendas</a>
-
-<br>
-
-<button id="btn-sair">
-Sair
-</button>
-
-</div>
+<div class="sidebar"></div>
 
 <div class="main">
-
 <div class="header">
-
-<h1>
-💰 VENDAS
-</h1>
-
+    <h1>💰 VENDAS</h1>
+    <p>Venda de pneus e serviços</p>
 </div>
 
 <div class="container">
 
-<h2>
-Nova Venda
-</h2>
+    <h2>Nova Venda / Serviço</h2>
 
-<input
-id="cliente"
-placeholder="Cliente">
+    <div class="os-form-container">
 
-<br><br>
+        <div class="os-form-row">
+            <div class="os-form-group full-width">
+                <select id="tipo_venda" onchange="alternarTipo()">
+                    <option value="pneu">🛞 Venda de Pneu</option>
+                    <option value="servico">🔧 Serviço / Mão de Obra</option>
+                </select>
+            </div>
+        </div>
 
-<select id="pneu_id">
+        <div class="os-form-row">
+            <div class="os-form-group full-width">
+                <input id="cliente" placeholder="Nome do Cliente">
+            </div>
+        </div>
 
-<option value="">
-Selecione o Pneu
-</option>
+        <div id="campos-pneu">
+            <div class="os-form-row">
+                <div class="os-form-group full-width">
+                    <select id="pneu_id" onchange="preencherValorPneu()">
+                        <option value="">Selecione o Pneu</option>
+                    </select>
+                </div>
+            </div>
+            <div class="os-form-row">
+                <div class="os-form-group">
+                    <input id="quantidade" type="number" placeholder="Quantidade" min="1" oninput="calcularTotalPneu()">
+                </div>
+                <div class="os-form-group">
+                    <input id="valor_total" type="number" placeholder="Valor Total (R$)">
+                </div>
+            </div>
+            <p id="info-lucro" style="color:green;font-weight:bold;padding:0 0 10px 0;"></p>
+        </div>
 
-</select>
+        <div id="campos-servico" style="display:none;">
+            <div class="os-form-row">
+                <div class="os-form-group full-width">
+                    <select id="servico_id" onchange="preencherValorServico()">
+                        <option value="">Selecione o Serviço</option>
+                    </select>
+                </div>
+            </div>
+            <div class="os-form-row">
+                <div class="os-form-group full-width">
+                    <input id="valor_servico" type="number" placeholder="Valor Cobrado (R$)">
+                </div>
+            </div>
+        </div>
 
-<br><br>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <select id="forma_pagamento">
+                    <option>PIX</option>
+                    <option>Dinheiro</option>
+                    <option>Cartão Débito</option>
+                    <option>Cartão Crédito</option>
+                </select>
+            </div>
+            <div class="os-form-group">
+                <input id="observacao" placeholder="Observação">
+            </div>
+        </div>
 
-<input
-id="quantidade"
-type="number"
-placeholder="Quantidade">
+    </div>
 
-<br><br>
+    <br>
+    <button onclick="salvarVenda()">💾 Salvar</button>
 
-<input
-id="valor_total"
-type="number"
-placeholder="Valor Total">
+    <hr>
 
-<br><br>
-
-<select id="forma_pagamento">
-
-<option>
-PIX
-</option>
-
-<option>
-Dinheiro
-</option>
-
-<option>
-Cartão Débito
-</option>
-
-<option>
-Cartão Crédito
-</option>
-
-</select>
-
-<br><br>
-
-<textarea
-id="observacao"
-placeholder="Observação">
-</textarea>
-
-<br><br>
-
-<button onclick="salvarVenda()">
-
-Salvar Venda
-
-</button>
-
-<hr>
-
-<h2>
-Histórico de Vendas
-</h2>
-
-<input
-id="pesquisa"
-placeholder="Pesquisar Cliente"
-onkeyup="filtrarVendas()">
-
-<br><br>
-
-<div id="lista-vendas"></div>
+    <h2>Histórico</h2>
+    <input id="pesquisa" placeholder="🔍 Pesquisar Cliente..." onkeyup="filtrarVendas()">
+    <br><br>
+    <div id="lista-vendas"></div>
 
 </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="../js/config.js"></script>
-
 <script src="../js/auth.js"></script>
-
 <script src="../js/vendas.js"></script>
-
 </body>
-
 </html>
