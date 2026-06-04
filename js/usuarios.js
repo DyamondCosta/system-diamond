@@ -2,22 +2,6 @@ const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON
 
 let usuarioEditando = null;
 
-const perfilLabel = {
-    'admin': 'Administrador',
-    'administrador': 'Administrador',
-    'gerente': 'Gerente',
-    'funcionario': 'Funcionário',
-    'funcionário': 'Funcionário'
-};
-
-const perfilCor = {
-    'admin': '#ef4444',
-    'administrador': '#ef4444',
-    'gerente': '#3b82f6',
-    'funcionario': '#10b981',
-    'funcionário': '#10b981'
-};
-
 async function salvarUsuario() {
     const nome = document.getElementById('nome').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -38,7 +22,6 @@ async function salvarUsuario() {
             .eq('id', usuarioEditando);
 
         if (error) { alert('Erro ao atualizar usuário'); return; }
-
         alert('✅ Usuário atualizado!');
         cancelarEdicao();
 
@@ -59,7 +42,7 @@ function limparCampos() {
     document.getElementById('nome').value = '';
     document.getElementById('email').value = '';
     document.getElementById('senha').value = '';
-    document.getElementById('perfil').value = 'admin';
+    document.getElementById('perfil').value = 'Administrador';
 }
 
 function cancelarEdicao() {
@@ -80,10 +63,19 @@ async function carregarUsuarios() {
     const lista = document.getElementById('lista-usuarios');
     lista.innerHTML = '';
 
+    if (!data || data.length === 0) {
+        lista.innerHTML = '<p>Nenhum usuário cadastrado.</p>';
+        return;
+    }
+
     (data || []).forEach(usuario => {
-        const chave = (usuario.perfil || '').toLowerCase().trim();
-        const label = perfilLabel[chave] || usuario.perfil;
-        const cor = perfilCor[chave] || '#6b7280';
+        const perfil = usuario.perfil || '';
+        const perfilLower = perfil.toLowerCase().trim();
+
+        let cor = '#6b7280';
+        if (perfilLower === 'admin' || perfilLower === 'administrador') cor = '#ef4444';
+        else if (perfilLower === 'gerente') cor = '#3b82f6';
+        else if (perfilLower === 'funcionario' || perfilLower === 'funcionário') cor = '#10b981';
 
         lista.innerHTML += `
         <div class="card">
@@ -93,7 +85,7 @@ async function carregarUsuarios() {
                     <p style="color:#6b7280;margin:0;font-size:13px;">✉️ ${usuario.email}</p>
                 </div>
                 <span style="background:${cor};color:white;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:bold;">
-                    ${label}
+                    ${perfil}
                 </span>
             </div>
             <div style="display:flex;gap:8px;margin-top:12px;">
@@ -118,17 +110,7 @@ async function editarUsuario(id) {
     document.getElementById('nome').value = data.nome || '';
     document.getElementById('email').value = data.email || '';
     document.getElementById('senha').value = '';
-
-    // normaliza o perfil para o valor do select
-    const perfilNormalizado = (data.perfil || '').toLowerCase().trim();
-    const perfilMap = {
-        'admin': 'admin',
-        'administrador': 'admin',
-        'gerente': 'gerente',
-        'funcionario': 'funcionario',
-        'funcionário': 'funcionario'
-    };
-    document.getElementById('perfil').value = perfilMap[perfilNormalizado] || 'funcionario';
+    document.getElementById('perfil').value = data.perfil || 'Administrador';
 
     document.getElementById('titulo-form').textContent = '✏️ Editando Usuário';
     document.getElementById('btn-salvar').textContent = '💾 Salvar Alterações';

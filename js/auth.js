@@ -8,7 +8,6 @@ if (!usuario) {
     window.location.href = caminhoLogin;
 }
 
-// TIMER DE INATIVIDADE (10 minutos)
 let tempoInatividade;
 function reiniciarTimer() {
     clearTimeout(tempoInatividade);
@@ -23,19 +22,12 @@ document.addEventListener('keypress', reiniciarTimer);
 document.addEventListener('click', reiniciarTimer);
 reiniciarTimer();
 
-// PERFIL — aceita qualquer variação de escrita
+// Aceita qualquer variação de escrita
 const perfilRaw = (usuario.perfil || '').toLowerCase().trim();
-const ehAdmin = perfilRaw === 'admin' || perfilRaw === 'administrador';
-const ehGerente = perfilRaw === 'gerente';
-const temAcessoTotal = ehAdmin || ehGerente; // gerente = mesmas permissões do admin
-
-const perfilLabel = {
-    'admin': 'Administrador',
-    'administrador': 'Administrador',
-    'gerente': 'Gerente',
-    'funcionario': 'Funcionário',
-    'funcionário': 'Funcionário'
-};
+const temAcessoTotal =
+    perfilRaw === 'admin' ||
+    perfilRaw === 'administrador' ||
+    perfilRaw === 'gerente';
 
 function montarMenu() {
     const sidebar = document.querySelector('.sidebar');
@@ -47,8 +39,6 @@ function montarMenu() {
         return paginaAtual === arquivo ? 'style="opacity:1;font-weight:bold;"' : '';
     }
 
-    const labelPerfil = perfilLabel[perfilRaw] || usuario.perfil;
-
     let menuHTML = `
     <div style="text-align:center;padding:10px 0 5px;">
         <img src="${caminhoBase}img/logo-batalhao.jpeg"
@@ -59,7 +49,7 @@ function montarMenu() {
 
     <div style="padding:8px 15px;margin-bottom:10px;background:rgba(255,255,255,0.08);border-radius:8px;">
         <p style="color:white;font-size:13px;margin:0;">👤 ${usuario.nome}</p>
-        <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:2px 0 0;">${labelPerfil}</p>
+        <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:2px 0 0;">${usuario.perfil}</p>
     </div>
 
     <a href="${caminhoBase}index.html" ${linkAtivo('index.html')}>🏠 Dashboard</a>
@@ -80,7 +70,6 @@ function montarMenu() {
     }
 
     menuHTML += `<br><button id="btn-sair">Sair</button>`;
-
     sidebar.innerHTML = menuHTML;
 
     document.getElementById('btn-sair').addEventListener('click', () => {
@@ -88,16 +77,6 @@ function montarMenu() {
         window.location.href = caminhoLogin;
     });
 
-    // ESCONDE CARDS FINANCEIROS PARA FUNCIONÁRIO
     if (!temAcessoTotal) {
         setTimeout(() => {
-            ['card-financeiro-mes', 'saidas-hoje', 'lucro-hoje',
-             'faturamento-mes', 'vendas-hoje'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el && el.parentElement) el.parentElement.style.display = 'none';
-            });
-        }, 100);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', montarMenu);
+            ['card-financeiro-mes', 'saidas-hoje', 'lucro-ho
