@@ -47,23 +47,27 @@ function preencherValorPneu() {
     const preco = option.getAttribute('data-preco') || 0;
     const qtd = Number(document.getElementById('quantidade').value) || 1;
     document.getElementById('valor_total').value = (Number(preco) * qtd).toFixed(2);
-    calcularTotalPneu();
+    calcularLucroPneu(); // ✅ chama só o lucro, não sobrescreve o valor_total
 }
 
-// CALCULA TOTAL E LUCRO AO MUDAR QUANTIDADE
+// ✅ CORRIGIDO: calcula lucro com base no valor_total digitado pelo usuário
 function calcularTotalPneu() {
+    calcularLucroPneu();
+}
+
+// ✅ NOVO: calcula e mostra o lucro sem mexer no campo valor_total
+function calcularLucroPneu() {
     const select = document.getElementById('pneu_id');
     const option = select.options[select.selectedIndex];
-    const preco = Number(option.getAttribute('data-preco')) || 0;
     const custo = Number(option.getAttribute('data-custo')) || 0;
     const qtd = Number(document.getElementById('quantidade').value) || 0;
+    const valorTotal = Number(document.getElementById('valor_total').value) || 0;
 
-    const total = preco * qtd;
-    const lucro = (preco - custo) * qtd;
+    // lucro = valor que o usuário digitou - (custo * quantidade)
+    const lucro = valorTotal - (custo * qtd);
 
-    document.getElementById('valor_total').value = total.toFixed(2);
     document.getElementById('info-lucro').textContent =
-        qtd > 0 ? `💡 Lucro estimado: R$ ${lucro.toFixed(2)}` : '';
+        qtd > 0 && valorTotal > 0 ? `💡 Lucro estimado: R$ ${lucro.toFixed(2)}` : '';
 }
 
 // CARREGA SERVIÇOS NO SELECT
@@ -124,7 +128,8 @@ async function salvarVendaPneu(cliente, forma_pagamento, observacao) {
     if (!pneu) { alert('Pneu não encontrado'); return; }
     if (quantidade > Number(pneu.quantidade)) { alert('Estoque insuficiente! Disponível: ' + pneu.quantidade); return; }
 
-    const lucro = (Number(pneu.preco_venda) - Number(pneu.preco_compra)) * quantidade;
+    // ✅ CORRIGIDO: lucro calculado com o valor_total digitado, não o preço cadastrado
+    const lucro = valor_total - (Number(pneu.preco_compra) * quantidade);
 
     // REGISTRA NO CAIXA
     const { data: caixaData, error: caixaErro } = await clienteSupabase
@@ -150,7 +155,7 @@ async function salvarVendaPneu(cliente, forma_pagamento, observacao) {
             pneu_nome: `${pneu.marca} ${pneu.modelo}`,
             quantidade,
             valor_total,
-            lucro: lucro.toFixed(2),
+            lucro: lucro.toFixed(2), // ✅ lucro real baseado no valor cobrado
             forma_pagamento,
             status: 'FINALIZADA',
             observacao,

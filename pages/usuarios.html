@@ -1,85 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Usuários</title>
-
 <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
 
-<div class="sidebar">
-
-<h2>🛞 Batalhão</h2>
-
-<p id="usuario-logado"></p>
-
-<a href="../index.html">Dashboard</a>
-<a href="usuarios.html">Usuários</a>
-
-<button id="btn-sair">
-Sair
-</button>
-
-</div>
+<div class="sidebar"></div>
 
 <div class="main">
-
 <div class="header">
-<h1>USUÁRIOS</h1>
+    <h1>⚙️ USUÁRIOS</h1>
+    <p>Gerenciamento de acesso ao sistema</p>
 </div>
 
 <div class="container">
 
-<input id="nome" placeholder="Nome">
+    <h2 id="titulo-form">Novo Usuário</h2>
 
-<br><br>
+    <div class="os-form-container">
 
-<input id="email" placeholder="Email">
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="nome" placeholder="Nome completo">
+            </div>
+            <div class="os-form-group">
+                <input id="email" placeholder="Email" type="email">
+            </div>
+        </div>
 
-<br><br>
-
-<input id="senha" placeholder="Senha">
-
-<br><br>
-
-<select id="perfil">
-
-<option>
-Administrador
-</option>
-
-<option>
-Gerente
-</option>
-
-<option>
-Funcionário
-</option>
-
-</select>
-
-<br><br>
-
-<button onclick="salvarUsuario()">
-Salvar Usuário
-</button>
-
-<hr>
-
-<div id="lista-usuarios"></div>
-
-</div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/config.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/usuarios.js"></script>
-
-</body>
-</html>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="senha" placeholder="Senha" type="password">
+            </div>
+            <div class="os-form-group">
+                <select id="perfil">
+                    <option value="admin">Administrador</option>
