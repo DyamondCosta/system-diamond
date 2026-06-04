@@ -1,36 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LC Solutions ERP</title>
+<title>Batalhão dos Pneus</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<div class="sidebar">
-    <div style="text-align:center;">
-        <img src="img/logo-batalhao.jpeg" style="width:140px;margin-bottom:15px;border-radius:12px;">
-        <h2>LC Solutions</h2>
-        <p style="font-size:12px;opacity:.8;margin-bottom:20px;">Sistema do Cliente</p>
-    </div>
-
-    <p id="usuario-logado"></p>
-
-    <a href="index.html">Dashboard</a>
-    <a href="pages/clientes.html">Clientes</a>
-    <a href="pages/pneus.html">Pneus</a>
-    <a href="pages/servicos.html">Serviços</a>
-    <a href="pages/ordens-servico.html">Ordens de Serviço</a>
-    <a href="pages/vendas.html">Vendas</a>
-    <a href="pages/caixa.html" id="menu-caixa">Caixa</a>
-    <a href="pages/agendamentos.html">Agendamentos</a>
-    <a href="pages/usuarios.html" id="menu-usuarios">Usuários</a>
-    <br>
-    <button id="btn-sair">Sair</button>
-</div>
+<div class="sidebar"></div>
 
 <div class="main">
     <div class="header">
@@ -42,46 +20,64 @@
         <h2>Dashboard Operacional</h2>
 
         <div class="cards">
-            <div class="card" onclick="window.location.href='pages/servicos.html'" style="cursor:pointer;">
-                <h2>Serviços</h2>
-                <p id="servicos-hoje">0</p>
+
+            <div class="card" onclick="window.location.href='pages/caixa.html'" style="cursor:pointer;">
+                <h2>💰 Entradas Hoje</h2>
+                <p id="vendas-hoje" style="color:#10b981;">R$ 0,00</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='pages/caixa.html'" style="cursor:pointer;">
+                <h2>📉 Saídas Hoje</h2>
+                <p id="saidas-hoje" style="color:#ef4444;">R$ 0,00</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='pages/caixa.html'" style="cursor:pointer;">
+                <h2>💵 Saldo do Dia</h2>
+                <p id="saldo-hoje" style="color:#3b82f6;">R$ 0,00</p>
             </div>
 
             <div class="card" onclick="window.location.href='pages/vendas.html'" style="cursor:pointer;">
-                <h2>Entradas</h2>
-                <p id="vendas-hoje">R$ 0,00</p>
+                <h2>📈 Lucro Hoje</h2>
+                <p id="lucro-hoje" style="color:#8b5cf6;">R$ 0,00</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='pages/caixa.html'" style="cursor:pointer;" id="card-financeiro-mes">
+                <h2>📅 Faturamento do Mês</h2>
+                <p id="faturamento-mes">R$ 0,00</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='pages/agendamentos.html'" style="cursor:pointer;">
+                <h2>📅 Agendamentos Hoje</h2>
+                <p id="agendamentos-hoje">0</p>
             </div>
 
             <div class="card" onclick="window.location.href='pages/ordens-servico.html'" style="cursor:pointer;">
-                <h2>OS Abertas</h2>
+                <h2>📋 Orçamentos Abertos</h2>
                 <p id="os-abertas">0</p>
             </div>
 
             <div class="card" onclick="window.location.href='pages/pneus.html'" style="cursor:pointer;">
-                <h2>Estoque Baixo</h2>
-                <p id="estoque-baixo">0</p>
+                <h2>⚠️ Estoque Baixo</h2>
+                <p id="estoque-baixo" style="color:#f59e0b;">0</p>
             </div>
 
             <div class="card" onclick="window.location.href='pages/pneus.html'" style="cursor:pointer;">
-                <h2>Total de Pneus</h2>
+                <h2>🛞 Total de Pneus</h2>
                 <p id="total-pneus">0</p>
             </div>
 
-            <div class="card" id="card-financeiro-mes">
-                <h2>Faturamento do Mês</h2>
-                <p id="faturamento-mes">R$ 0,00</p>
+            <div class="card" onclick="window.location.href='pages/servicos.html'" style="cursor:pointer;">
+                <h2>🔧 Serviços Cadastrados</h2>
+                <p id="servicos-hoje">0</p>
             </div>
 
-            <div class="card">
-                <h2>Saídas</h2>
-                <p id="saidas-hoje">R$ 0,00</p>
-            </div>
-
-            <div class="card">
-                <h2>Saldo em Caixa</h2>
-                <p id="lucro-hoje">R$ 0,00</p>
-            </div>
         </div>
+
+        <div style="margin-top:30px;">
+            <h2>📅 Agendamentos de Hoje</h2>
+            <div id="lista-agendamentos-dia"></div>
+        </div>
+
     </div>
 </div>
 
