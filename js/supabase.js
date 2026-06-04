@@ -8,11 +8,6 @@ async function carregarDashboard() {
 
     try {
 
-        const hoje =
-        new Date()
-        .toISOString()
-        .split('T')[0];
-
         const primeiroDiaMes =
         new Date(
             new Date().getFullYear(),
@@ -30,25 +25,13 @@ async function carregarDashboard() {
         .from('vendas')
         .select('*');
 
-        const vendasHoje =
-        (vendas || []).filter(
-            v => v.data_venda === hoje
-        );
-
-        const totalHoje =
-        vendasHoje.reduce(
-            (total, v) =>
-            total +
-            Number(v.valor_total || 0),
-            0
-        );
-
         const vendasMes =
-        (vendas || []).filter(
+        (vendas || [])
+        .filter(
             v => v.data_venda >= primeiroDiaMes
         );
 
-        const totalMes =
+        const faturamentoMes =
         vendasMes.reduce(
             (total, v) =>
             total +
@@ -64,7 +47,20 @@ async function carregarDashboard() {
         .from('caixa')
         .select('*');
 
-        const totalSaidas =
+        const entradas =
+        (caixa || [])
+        .filter(
+            item =>
+            item.tipo === 'ENTRADA'
+        )
+        .reduce(
+            (total, item) =>
+            total +
+            Number(item.valor || 0),
+            0
+        );
+
+        const saidas =
         (caixa || [])
         .filter(
             item =>
@@ -77,9 +73,8 @@ async function carregarDashboard() {
             0
         );
 
-        const lucroHoje =
-        totalHoje -
-        totalSaidas;
+        const saldo =
+        entradas - saidas;
 
         /*
         SERVIÇOS
@@ -87,13 +82,10 @@ async function carregarDashboard() {
         const { count: servicosTotal } =
         await clienteSupabase
         .from('servicos')
-        .select(
-            '*',
-            {
-                count:'exact',
-                head:true
-            }
-        );
+        .select('*', {
+            count:'exact',
+            head:true
+        });
 
         /*
         ORÇAMENTOS ABERTOS
@@ -101,13 +93,10 @@ async function carregarDashboard() {
         const { count: osAbertas } =
         await clienteSupabase
         .from('ordens_servico')
-        .select(
-            '*',
-            {
-                count:'exact',
-                head:true
-            }
-        )
+        .select('*', {
+            count:'exact',
+            head:true
+        })
         .neq(
             'status',
             'FINALIZADA'
@@ -119,13 +108,10 @@ async function carregarDashboard() {
         const { count: estoqueBaixo } =
         await clienteSupabase
         .from('pneus')
-        .select(
-            '*',
-            {
-                count:'exact',
-                head:true
-            }
-        )
+        .select('*', {
+            count:'exact',
+            head:true
+        })
         .lte(
             'quantidade',
             3
@@ -136,14 +122,12 @@ async function carregarDashboard() {
         );
 
         /*
-        TOTAL DE PNEUS
+        TOTAL PNEUS
         */
         const { data: pneus } =
         await clienteSupabase
         .from('pneus')
-        .select(
-            'quantidade'
-        )
+        .select('quantidade')
         .eq(
             'ativo',
             true
@@ -152,10 +136,10 @@ async function carregarDashboard() {
         const totalPneus =
         (pneus || [])
         .reduce(
-            (total, p) =>
+            (total, pneu) =>
             total +
             Number(
-                p.quantidade || 0
+                pneu.quantidade || 0
             ),
             0
         );
@@ -163,20 +147,11 @@ async function carregarDashboard() {
         /*
         DASHBOARD
         */
+
         document.getElementById(
             'servicos-hoje'
         ).textContent =
         servicosTotal || 0;
-
-        document.getElementById(
-            'vendas-hoje'
-        ).textContent =
-        `R$ ${totalHoje.toFixed(2)}`;
-
-        document.getElementById(
-            'faturamento-mes'
-        ).textContent =
-        `R$ ${totalMes.toFixed(2)}`;
 
         document.getElementById(
             'os-abertas'
@@ -194,14 +169,24 @@ async function carregarDashboard() {
         totalPneus || 0;
 
         document.getElementById(
+            'faturamento-mes'
+        ).textContent =
+        `R$ ${faturamentoMes.toFixed(2)}`;
+
+        document.getElementById(
+            'vendas-hoje'
+        ).textContent =
+        `R$ ${entradas.toFixed(2)}`;
+
+        document.getElementById(
             'saidas-hoje'
         ).textContent =
-        `R$ ${totalSaidas.toFixed(2)}`;
+        `R$ ${saidas.toFixed(2)}`;
 
         document.getElementById(
             'lucro-hoje'
         ).textContent =
-        `R$ ${lucroHoje.toFixed(2)}`;
+        `R$ ${saldo.toFixed(2)}`;
 
     }
 
