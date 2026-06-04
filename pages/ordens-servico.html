@@ -1,213 +1,110 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Ordens de Serviço</title>
-
+<title>Orçamentos</title>
 <link rel="stylesheet" href="../css/style.css">
-
 </head>
-
 <body>
 
-<div class="sidebar">
-
-<div style="text-align:center;">
-
-<img
-src="../img/logo-batalhao.jpeg"
-class="logo-sidebar">
-
-<h3 style="
-margin-top:10px;
-color:white;
-font-size:18px;
-">
-Batalhão dos Pneus
-</h3>
-
-<p style="
-font-size:12px;
-opacity:.8;
-margin-bottom:20px;
-">
-Sistema de Gestão
-</p>
-
-</div>
-
-<p id="usuario-logado"></p>
-
-<a href="../index.html">Dashboard</a>
-<a href="clientes.html">Clientes</a>
-<a href="pneus.html">Pneus</a>
-<a href="servicos.html">Serviços</a>
-<a href="vendas.html">Vendas</a>
-<a href="ordens-servico.html">Ordens de Serviço</a>
-<a href="caixa.html">Caixa</a>
-<a href="agendamentos.html">Agendamentos</a>
-
-<button id="btn-sair">
-Sair
-</button>
-
-</div>
+<div class="sidebar"></div>
 
 <div class="main">
-
 <div class="header">
-
-<h1>
-📋 ORÇAMENTO
-</h1>
-
-<p>
-Cadastro, acompanhamento e emissão de OS
-</p>
-
+    <h1>📋 ORÇAMENTOS</h1>
+    <p>Cadastro, acompanhamento e emissão de orçamentos</p>
 </div>
 
 <div class="container">
 
-<h2>
-Novo Orçamento
-</h2>
+    <h2 id="titulo-form">Novo Orçamento</h2>
 
-<div class="os-form-container">
+    <div class="os-form-container">
 
-<div class="os-form-row">
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="cliente_nome" placeholder="Nome do Cliente">
+            </div>
+            <div class="os-form-group">
+                <input id="telefone" placeholder="Telefone">
+            </div>
+        </div>
 
-<div class="os-form-group">
-<input
-id="cliente_nome"
-placeholder="Nome do Cliente">
-</div>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="placa" placeholder="Placa">
+            </div>
+            <div class="os-form-group">
+                <input id="veiculo" placeholder="Veículo">
+            </div>
+        </div>
 
-<div class="os-form-group">
-<input
-id="telefone"
-placeholder="Telefone">
-</div>
+        <div class="os-form-row">
+            <div class="os-form-group full-width">
+                <input id="servico" placeholder="Serviço Executado">
+            </div>
+        </div>
 
-</div>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="valor_mao_obra" type="number" placeholder="Valor Mão de Obra (R$)" oninput="calcularTotal()">
+            </div>
+            <div class="os-form-group">
+                <input id="valor_pecas" type="number" placeholder="Valor Peças (R$)" oninput="calcularTotal()">
+            </div>
+        </div>
 
-<div class="os-form-row">
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="valor_total" placeholder="Valor Total (R$)" readonly style="background:#f0fdf4;font-weight:bold;color:#10b981;">
+            </div>
+            <div class="os-form-group">
+                <select id="status">
+                    <option>ABERTA</option>
+                    <option>EM ANDAMENTO</option>
+                    <option>AGUARDANDO PEÇAS</option>
+                    <option>FINALIZADA</option>
+                </select>
+            </div>
+        </div>
 
-<div class="os-form-group">
-<input
-id="placa"
-placeholder="Placa">
-</div>
+        <div class="os-form-row">
+            <div class="os-form-group full-width">
+                <textarea id="observacao" placeholder="Observações"></textarea>
+            </div>
+        </div>
 
-<div class="os-form-group">
-<input
-id="veiculo"
-placeholder="Veículo">
-</div>
+    </div>
 
-</div>
+    <br>
+    <button id="btn-salvar" onclick="salvarOS()">💾 Salvar Orçamento</button>
+    <button id="btn-cancelar" onclick="cancelarEdicao()" style="display:none;background:#6b7280;margin-left:10px;">❌ Cancelar</button>
 
-<div class="os-form-row">
+    <hr style="margin:30px 0;">
 
-<div class="os-form-group full-width">
-<input
-id="servico"
-placeholder="Serviço Executado">
-</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+        <h2 style="margin:0;">Orçamentos</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button onclick="filtrarOS('TODOS')" style="background:#6b7280;">📋 Todos</button>
+            <button onclick="filtrarOS('ABERTA')" style="background:#f59e0b;">🟡 Abertas</button>
+            <button onclick="filtrarOS('EM ANDAMENTO')" style="background:#3b82f6;">🔵 Em Andamento</button>
+            <button onclick="filtrarOS('AGUARDANDO PEÇAS')" style="background:#ef4444;">🔴 Aguard. Peças</button>
+            <button onclick="filtrarOS('FINALIZADA')" style="background:#10b981;">🟢 Finalizadas</button>
+        </div>
+    </div>
 
-</div>
+    <input id="pesquisa-os" placeholder="🔍 Pesquisar por cliente ou placa..." onkeyup="pesquisarOS()" style="margin-bottom:15px;">
 
-<div class="os-form-row">
-
-<div class="os-form-group">
-<input
-id="valor_mao_obra"
-placeholder="Valor Mão de Obra"
-oninput="calcularTotal()">
-</div>
-
-<div class="os-form-group">
-<input
-id="valor_pecas"
-placeholder="Valor Peças"
-oninput="calcularTotal()">
-</div>
-
-</div>
-
-<div class="os-form-row">
-
-<div class="os-form-group">
-<input
-id="valor_total"
-placeholder="Valor Total"
-readonly>
-</div>
-
-<div class="os-form-group">
-
-<select id="status">
-
-<option>ABERTA</option>
-<option>EM ANDAMENTO</option>
-<option>AGUARDANDO PEÇAS</option>
-<option>FINALIZADA</option>
-
-</select>
+    <div id="lista-os"></div>
 
 </div>
-
-</div>
-
-<div class="os-form-row">
-
-<div class="os-form-group full-width">
-
-<textarea
-id="observacao"
-placeholder="Observações">
-</textarea>
-
-</div>
-
-</div>
-
-</div>
-
-<br>
-
-<button onclick="salvarOS()">
-Salvar OS
-</button>
-
-<hr style="
-margin:30px 0;
-">
-
-<h2>
-Orçamento
-</h2>
-
-<div id="lista-os"></div>
-
-</div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script src="../js/config.js"></script>
-
 <script src="../js/auth.js"></script>
-
 <script src="../js/ordens-servico.js"></script>
-
 </body>
-
 </html>
