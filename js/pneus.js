@@ -1,434 +1,243 @@
-const clienteSupabase =
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_ANON_KEY
-);
+const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let pneuEditando = null;
+let pneusCarregados = [];
+let filtroAtual = 'todos';
 
-async function salvarPneu(){
+async function salvarPneu() {
+    const marca = document.getElementById('marca').value.trim();
+    const modelo = document.getElementById('modelo').value.trim();
+    const medida = document.getElementById('medida').value.trim();
+    const tipo = document.getElementById('tipo').value.trim();
+    const preco_compra = Number(document.getElementById('preco_compra').value);
+    const preco_venda = Number(document.getElementById('preco_venda').value);
+    const quantidade = Number(document.getElementById('quantidade').value);
+    const estoque_minimo = Number(document.getElementById('estoque_minimo').value) || 2;
 
-const marca =
-document.getElementById('marca').value;
+    if (!marca) { alert('Informe a marca'); return; }
+    if (!modelo) { alert('Informe o modelo'); return; }
+    if (!preco_venda) { alert('Informe o preço de venda'); return; }
 
-const modelo =
-document.getElementById('modelo').value;
+    if (pneuEditando) {
+        const { error } = await clienteSupabase
+            .from('pneus')
+            .update({ marca, modelo, medida, tipo, preco_compra, preco_venda, quantidade, estoque_minimo })
+            .eq('id', pneuEditando);
 
-const medida =
-document.getElementById('medida').value;
+        if (error) { alert('Erro ao atualizar pneu'); return; }
 
-const tipo =
-document.getElementById('tipo').value;
+        alert('✅ Pneu atualizado!');
+        pneuEditando = null;
+        cancelarEdicao();
 
-const preco_compra =
-Number(
-document.getElementById('preco_compra').value
-);
+    } else {
+        const { error } = await clienteSupabase
+            .from('pneus')
+            .insert([{ marca, modelo, medida, tipo, preco_compra, preco_venda, quantidade, estoque_minimo, ativo: true }]);
 
-const preco_venda =
-Number(
-document.getElementById('preco_venda').value
-);
+        if (error) { alert('Erro ao salvar pneu'); return; }
+        alert('✅ Pneu cadastrado com sucesso!');
+    }
 
-const quantidade =
-Number(
-document.getElementById('quantidade').value
-);
-
-if(pneuEditando){
-
-const { error } =
-await clienteSupabase
-.from('pneus')
-.update({
-marca,
-modelo,
-medida,
-tipo,
-preco_compra,
-preco_venda,
-quantidade
-})
-.eq('id', pneuEditando);
-
-if(error){
-
-console.log(error);
-
-alert(
-'Erro ao atualizar pneu'
-);
-
-return;
-
+    limparCampos();
+    carregarPneus();
 }
 
-alert(
-'Pneu atualizado com sucesso'
-);
-
-pneuEditando = null;
-
-limparCampos();
-
-carregarPneus();
-
-return;
-
+function limparCampos() {
+    ['marca', 'modelo', 'medida', 'tipo', 'preco_compra', 'preco_venda', 'quantidade', 'estoque_minimo']
+        .forEach(id => document.getElementById(id).value = '');
 }
 
-const { error } =
-await clienteSupabase
-.from('pneus')
-.insert([
-{
-marca,
-modelo,
-medida,
-tipo,
-preco_compra,
-preco_venda,
-quantidade,
-ativo:true
-}
-]);
-
-if(error){
-
-console.log(error);
-
-alert(
-'Erro ao salvar pneu'
-);
-
-return;
-
+function cancelarEdicao() {
+    pneuEditando = null;
+    limparCampos();
+    document.getElementById('titulo-form').textContent = 'Cadastrar Pneu';
+    document.getElementById('btn-salvar').textContent = '💾 Salvar Pneu';
+    document.getElementById('btn-cancelar').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-alert(
-'Pneu salvo com sucesso'
-);
+async function carregarPneus() {
+    const { data, error } = await clienteSupabase
+        .from('pneus')
+        .select('*')
+        .eq('ativo', true)
+        .order('marca', { ascending: true });
 
-limparCampos();
+    if (error) { console.log(error); return; }
 
-carregarPneus();
-
+    pneusCarregados = data || [];
+    renderizarPneus(pneusCarregados);
 }
 
-function limparCampos(){
-
-document.getElementById('marca').value='';
-document.getElementById('modelo').value='';
-document.getElementById('medida').value='';
-document.getElementById('tipo').value='';
-document.getElementById('preco_compra').value='';
-document.getElementById('preco_venda').value='';
-document.getElementById('quantidade').value='';
-
+function filtrarEstoque(filtro) {
+    filtroAtual = filtro;
+    pesquisarPneu();
 }
 
-async function carregarPneus(){
+function pesquisarPneu() {
+    const texto = (document.getElementById('pesquisa-pneu').value || '').toLowerCase();
 
-const { data, error } =
-await clienteSupabase
-.from('pneus')
-.select('*')
-.eq('ativo', true)
-.order(
-'id',
-{
-ascending:false
-}
-);
+    let filtrados = pneusCarregados;
 
-if(error){
+    if (filtroAtual === 'baixo') {
+        filtrados = filtrados.filter(p => Number(p.quantidade) <= Number(p.estoque_minimo || 2));
+    } else if (filtroAtual === 'ok') {
+        filtrados = filtrados.filter(p => Number(p.quantidade) > Number(p.estoque_minimo || 2));
+    }
 
-console.log(error);
-return;
+    if (texto) {
+        filtrados = filtrados.filter(p =>
+            (p.marca || '').toLowerCase().includes(texto) ||
+            (p.modelo || '').toLowerCase().includes(texto) ||
+            (p.medida || '').toLowerCase().includes(texto) ||
+            (p.tipo || '').toLowerCase().includes(texto)
+        );
+    }
 
-}
-
-const lista =
-document.getElementById(
-'lista-pneus'
-);
-
-lista.innerHTML='';
-
-data.forEach(pneu=>{
-
-const estoqueBaixo =
-Number(
-pneu.quantidade
-)
-<=
-Number(
-pneu.estoque_minimo || 2
-);
-
-lista.innerHTML += `
-
-<div class="card">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:12px;
-">
-
-<div>
-
-<h3 style="
-margin:0;
-font-size:20px;
-">
-${pneu.marca} ${pneu.modelo}
-</h3>
-
-<div style="
-color:#64748b;
-font-size:14px;
-margin-top:4px;
-">
-${pneu.medida || '-'} • ${pneu.tipo || '-'}
-</div>
-
-</div>
-
-<div style="
-font-size:18px;
-font-weight:bold;
-color:${estoqueBaixo ? '#dc2626' : '#16a34a'};
-">
-${pneu.quantidade} un.
-</div>
-
-</div>
-
-<div style="
-display:flex;
-gap:30px;
-margin-bottom:12px;
-font-size:15px;
-">
-
-<div>
-Compra:
-<b>
-R$ ${Number(
-pneu.preco_compra || 0
-).toFixed(2)}
-</b>
-</div>
-
-<div>
-Venda:
-<b>
-R$ ${Number(
-pneu.preco_venda || 0
-).toFixed(2)}
-</b>
-</div>
-
-</div>
-
-<div style="
-margin-bottom:15px;
-font-weight:600;
-color:${estoqueBaixo ? '#dc2626' : '#16a34a'};
-">
-
-${estoqueBaixo
-? 'ESTOQUE BAIXO'
-: 'ESTOQUE OK'}
-
-</div>
-
-<div style="
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-">
-
-<button
-onclick="editarPneu(${pneu.id})">
-Editar </button>
-
-<button
-onclick="entradaEstoque(${pneu.id})">
-Entrada </button>
-
-<button
-onclick="saidaEstoque(${pneu.id})">
-Saída </button>
-
-<button
-onclick="excluirPneu(${pneu.id})">
-Inativar </button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
+    renderizarPneus(filtrados);
 }
 
-async function editarPneu(id){
+function renderizarPneus(lista) {
+    const container = document.getElementById('lista-pneus');
+    container.innerHTML = '';
 
-const { data } =
-await clienteSupabase
-.from('pneus')
-.select('*')
-.eq('id', id)
-.single();
+    if (lista.length === 0) {
+        container.innerHTML = '<p style="color:#6b7280;">Nenhum pneu encontrado.</p>';
+        return;
+    }
 
-if(!data) return;
+    lista.forEach(pneu => {
+        const estoqueBaixo = Number(pneu.quantidade) <= Number(pneu.estoque_minimo || 2);
+        const margem = Number(pneu.preco_venda) - Number(pneu.preco_compra);
+        const margemPct = pneu.preco_compra > 0
+            ? ((margem / Number(pneu.preco_compra)) * 100).toFixed(0)
+            : 0;
 
-pneuEditando = id;
+        container.innerHTML += `
+        <div class="card" style="${estoqueBaixo ? 'border-left:4px solid #ef4444;' : 'border-left:4px solid #10b981;'}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <h3 style="margin:0 0 4px;font-size:18px;">${pneu.marca} ${pneu.modelo}</h3>
+                    <p style="margin:0;color:#6b7280;font-size:13px;">
+                        📐 ${pneu.medida || '-'} • 🏷️ ${pneu.tipo || '-'}
+                    </p>
+                </div>
+                <div style="text-align:right;">
+                    <p style="margin:0;font-size:24px;font-weight:bold;color:${estoqueBaixo ? '#ef4444' : '#10b981'};">
+                        ${pneu.quantidade} un.
+                    </p>
+                    <p style="margin:2px 0 0;font-size:11px;color:${estoqueBaixo ? '#ef4444' : '#10b981'};font-weight:bold;">
+                        ${estoqueBaixo ? '⚠️ ESTOQUE BAIXO' : '✅ ESTOQUE OK'}
+                    </p>
+                </div>
+            </div>
 
-document.getElementById('marca').value =
-data.marca || '';
+            <div style="display:flex;gap:20px;margin:12px 0;flex-wrap:wrap;">
+                <div style="background:#f0fdf4;padding:8px 14px;border-radius:8px;">
+                    <p style="margin:0;font-size:11px;color:#6b7280;">COMPRA</p>
+                    <p style="margin:2px 0 0;font-weight:bold;color:#374151;">R$ ${Number(pneu.preco_compra || 0).toFixed(2)}</p>
+                </div>
+                <div style="background:#eff6ff;padding:8px 14px;border-radius:8px;">
+                    <p style="margin:0;font-size:11px;color:#6b7280;">VENDA</p>
+                    <p style="margin:2px 0 0;font-weight:bold;color:#374151;">R$ ${Number(pneu.preco_venda || 0).toFixed(2)}</p>
+                </div>
+                <div style="background:#faf5ff;padding:8px 14px;border-radius:8px;">
+                    <p style="margin:0;font-size:11px;color:#6b7280;">MARGEM</p>
+                    <p style="margin:2px 0 0;font-weight:bold;color:#8b5cf6;">R$ ${margem.toFixed(2)} (${margemPct}%)</p>
+                </div>
+                <div style="background:#fff7ed;padding:8px 14px;border-radius:8px;">
+                    <p style="margin:0;font-size:11px;color:#6b7280;">MÍN. ESTOQUE</p>
+                    <p style="margin:2px 0 0;font-weight:bold;color:#f59e0b;">${pneu.estoque_minimo || 2} un.</p>
+                </div>
+            </div>
 
-document.getElementById('modelo').value =
-data.modelo || '';
-
-document.getElementById('medida').value =
-data.medida || '';
-
-document.getElementById('tipo').value =
-data.tipo || '';
-
-document.getElementById('preco_compra').value =
-data.preco_compra || '';
-
-document.getElementById('preco_venda').value =
-data.preco_venda || '';
-
-document.getElementById('quantidade').value =
-data.quantidade || '';
-
-window.scrollTo({
-top:0,
-behavior:'smooth'
-});
-
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="editarPneu(${pneu.id})">✏️ Editar</button>
+                <button onclick="entradaEstoque(${pneu.id})" style="background:#10b981;">📦 Entrada</button>
+                <button onclick="saidaEstoque(${pneu.id})" style="background:#f59e0b;">📤 Saída</button>
+                <button onclick="inativarPneu(${pneu.id})" style="background:#ef4444;">🗑️ Inativar</button>
+            </div>
+        </div>`;
+    });
 }
 
-async function entradaEstoque(id){
+async function editarPneu(id) {
+    const pneu = pneusCarregados.find(p => p.id === id);
+    if (!pneu) return;
 
-const qtd =
-prompt(
-'Quantidade para entrada:'
-);
+    pneuEditando = id;
 
-if(!qtd) return;
+    document.getElementById('marca').value = pneu.marca || '';
+    document.getElementById('modelo').value = pneu.modelo || '';
+    document.getElementById('medida').value = pneu.medida || '';
+    document.getElementById('tipo').value = pneu.tipo || '';
+    document.getElementById('preco_compra').value = pneu.preco_compra || '';
+    document.getElementById('preco_venda').value = pneu.preco_venda || '';
+    document.getElementById('quantidade').value = pneu.quantidade || '';
+    document.getElementById('estoque_minimo').value = pneu.estoque_minimo || '';
 
-const { data } =
-await clienteSupabase
-.from('pneus')
-.select('quantidade')
-.eq('id', id)
-.single();
+    document.getElementById('titulo-form').textContent = '✏️ Editando Pneu';
+    document.getElementById('btn-salvar').textContent = '💾 Salvar Alterações';
+    document.getElementById('btn-cancelar').style.display = 'inline-block';
 
-const novaQtd =
-Number(data.quantidade)
-+
-Number(qtd);
-
-await clienteSupabase
-.from('pneus')
-.update({
-quantidade:novaQtd
-})
-.eq('id', id);
-
-carregarPneus();
-
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-async function saidaEstoque(id){
+async function entradaEstoque(id) {
+    const qtd = prompt('Quantidade para entrada no estoque:');
+    if (!qtd || isNaN(qtd) || Number(qtd) <= 0) return;
 
-const qtd =
-prompt(
-'Quantidade para saída:'
-);
+    const pneu = pneusCarregados.find(p => p.id === id);
+    if (!pneu) return;
 
-if(!qtd) return;
+    const novaQtd = Number(pneu.quantidade) + Number(qtd);
 
-const { data } =
-await clienteSupabase
-.from('pneus')
-.select('quantidade')
-.eq('id', id)
-.single();
+    const { error } = await clienteSupabase
+        .from('pneus')
+        .update({ quantidade: novaQtd })
+        .eq('id', id);
 
-const novaQtd =
-Number(data.quantidade)
+    if (error) { alert('Erro ao atualizar estoque'); return; }
 
-Number(qtd);
-
-if(novaQtd < 0){
-
-alert(
-'Estoque insuficiente'
-);
-
-return;
-
+    alert(`✅ Entrada de ${qtd} unidades registrada!`);
+    carregarPneus();
 }
 
-await clienteSupabase
-.from('pneus')
-.update({
-quantidade:novaQtd
-})
-.eq('id', id);
+async function saidaEstoque(id) {
+    const qtd = prompt('Quantidade para saída do estoque:');
+    if (!qtd || isNaN(qtd) || Number(qtd) <= 0) return;
 
-carregarPneus();
+    const pneu = pneusCarregados.find(p => p.id === id);
+    if (!pneu) return;
 
+    const novaQtd = Number(pneu.quantidade) - Number(qtd);
+
+    if (novaQtd < 0) { alert('Estoque insuficiente!'); return; }
+
+    const { error } = await clienteSupabase
+        .from('pneus')
+        .update({ quantidade: novaQtd })
+        .eq('id', id);
+
+    if (error) { alert('Erro ao atualizar estoque'); return; }
+
+    alert(`✅ Saída de ${qtd} unidades registrada!`);
+    carregarPneus();
 }
 
-async function excluirPneu(id){
+async function inativarPneu(id) {
+    if (!confirm('Deseja inativar este pneu? Ele não aparecerá mais no estoque.')) return;
 
-const confirmar =
-confirm(
-'Deseja inativar este pneu?'
-);
+    const { error } = await clienteSupabase
+        .from('pneus')
+        .update({ ativo: false })
+        .eq('id', id);
 
-if(!confirmar){
-return;
-}
+    if (error) { alert('Erro ao inativar'); return; }
 
-const { error } =
-await clienteSupabase
-.from('pneus')
-.update({
-ativo:false
-})
-.eq('id', id);
-
-if(error){
-
-console.log(error);
-
-alert(
-'Erro ao inativar'
-);
-
-return;
-
-}
-
-alert(
-'Pneu inativado'
-);
-
-carregarPneus();
-
+    alert('Pneu inativado!');
+    carregarPneus();
 }
 
 carregarPneus();

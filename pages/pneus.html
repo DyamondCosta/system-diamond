@@ -1,90 +1,90 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Estoque de Pneus</title>
-
 <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
 
-<div class="sidebar">
-
-<h2>BATALHÃO DOS PNEUS</h2>
-
-<p id="usuario-logado"></p>
-
-<a href="../index.html">Dashboard</a> <a href="clientes.html">Clientes</a> <a href="pneus.html">Estoque</a> <a href="servicos.html">Serviços</a> <a href="vendas.html">Vendas</a> <a href="ordens-servico.html">Ordens de Serviço</a> <a href="caixa.html">Caixa</a> <a href="agendamentos.html">Agendamentos</a>
-
-<button id="btn-sair">
-Sair
-</button>
-
-</div>
+<div class="sidebar"></div>
 
 <div class="main">
-
 <div class="header">
-
-<h1>ESTOQUE DE PNEUS</h1>
-
-<p>
-Controle de estoque e movimentações
-</p>
-
+    <h1>🛞 ESTOQUE DE PNEUS</h1>
+    <p>Controle de estoque e movimentações</p>
 </div>
 
 <div class="container">
 
-<h2>Cadastro de Pneu</h2>
+    <h2 id="titulo-form">Cadastrar Pneu</h2>
 
-<input id="marca" placeholder="Marca">
-<br><br>
+    <div class="os-form-container">
 
-<input id="modelo" placeholder="Modelo">
-<br><br>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="marca" placeholder="Marca (ex: Michelin)">
+            </div>
+            <div class="os-form-group">
+                <input id="modelo" placeholder="Modelo (ex: Primacy 4)">
+            </div>
+        </div>
 
-<input id="medida" placeholder="Medida">
-<br><br>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="medida" placeholder="Medida (ex: 205/55R16)">
+            </div>
+            <div class="os-form-group">
+                <input id="tipo" placeholder="Tipo (ex: Passeio, SUV)">
+            </div>
+        </div>
 
-<input id="tipo" placeholder="Tipo">
-<br><br>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="preco_compra" type="number" placeholder="Preço de Compra (R$)">
+            </div>
+            <div class="os-form-group">
+                <input id="preco_venda" type="number" placeholder="Preço de Venda (R$)">
+            </div>
+        </div>
 
-<input id="preco_compra" placeholder="Preço de Compra">
-<br><br>
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="quantidade" type="number" placeholder="Quantidade em Estoque">
+            </div>
+            <div class="os-form-group">
+                <input id="estoque_minimo" type="number" placeholder="Estoque Mínimo (alerta)">
+            </div>
+        </div>
 
-<input id="preco_venda" placeholder="Preço de Venda">
-<br><br>
+    </div>
 
-<input id="quantidade" placeholder="Quantidade">
-<br><br>
+    <br>
+    <button id="btn-salvar" onclick="salvarPneu()">💾 Salvar Pneu</button>
+    <button id="btn-cancelar" onclick="cancelarEdicao()" style="display:none;background:#6b7280;margin-left:10px;">❌ Cancelar</button>
 
-<button onclick="salvarPneu()">
-Salvar
-</button>
+    <hr style="margin:30px 0;">
 
-<hr>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+        <h2 style="margin:0;">Itens em Estoque</h2>
+        <div style="display:flex;gap:8px;">
+            <button onclick="filtrarEstoque('todos')" style="background:#6b7280;">📋 Todos</button>
+            <button onclick="filtrarEstoque('baixo')" style="background:#f59e0b;">⚠️ Estoque Baixo</button>
+            <button onclick="filtrarEstoque('ok')" style="background:#10b981;">✅ Estoque OK</button>
+        </div>
+    </div>
 
-<h2>Itens em Estoque</h2>
+    <input id="pesquisa-pneu" placeholder="🔍 Pesquisar pneu..." onkeyup="pesquisarPneu()" style="margin-bottom:15px;">
 
-<div id="lista-pneus"></div>
+    <div id="lista-pneus"></div>
 
 </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="../js/config.js"></script>
-
 <script src="../js/auth.js"></script>
-
 <script src="../js/pneus.js"></script>
-
 </body>
 </html>
