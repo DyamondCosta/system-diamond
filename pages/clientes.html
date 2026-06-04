@@ -1,141 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
-
-    <link rel="stylesheet" href="../css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clientes</title>
+<link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
 
-    <div class="sidebar">
+<div class="sidebar"></div>
 
-        <div style="text-align:center;">
+<div class="main">
+<div class="header">
+    <h1>👥 CLIENTES</h1>
+    <p>Cadastro e gerenciamento de clientes</p>
+</div>
 
-            <img
-                src="../img/logo-batalhao.jpeg"
-                style="
-                width:140px;
-                margin-bottom:15px;
-                border-radius:12px;
-                ">
+<div class="container">
 
-            <h2>
-                Batalhão dos Pneus
-            </h2>
+    <h2 id="titulo-form">Novo Cliente</h2>
 
-            <p style="
-            font-size:12px;
-            opacity:.8;
-            margin-bottom:20px;
-            ">
-                Sistema de Gestão
-            </p>
+    <div class="os-form-container">
 
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="nome" placeholder="Nome do Cliente">
+            </div>
+            <div class="os-form-group">
+                <input id="telefone" placeholder="Telefone">
+            </div>
         </div>
 
-        <p id="usuario-logado"></p>
-
-        <a href="../index.html">Dashboard</a>
-        <a href="clientes.html">Clientes</a>
-        <a href="pneus.html">Pneus</a>
-        <a href="servicos.html">Serviços</a>
-        <a href="vendas.html">Vendas</a>
-        <a href="ordens-servico.html">Ordens de Serviço</a>
-        <a href="caixa.html">Caixa</a>
-        <a href="agendamentos.html">Agendamentos</a>
-        <a href="usuarios.html">Usuários</a>
-
-        <br>
-
-        <button id="btn-sair">
-            Sair
-        </button>
-
-    </div>
-
-    <div class="main">
-
-        <div class="header">
-
-            <h1>
-                👥 CLIENTES
-            </h1>
-
-            <p>
-                Cadastro e gerenciamento de clientes
-            </p>
-
+        <div class="os-form-row">
+            <div class="os-form-group">
+                <input id="placa" placeholder="Placa do Veículo">
+            </div>
+            <div class="os-form-group">
+                <input id="veiculo" placeholder="Veículo (ex: Gol 2020)">
+            </div>
         </div>
 
-        <div class="container">
-
-            <h2>
-                Novo Cliente
-            </h2>
-
-            <input
-                id="nome"
-                type="text"
-                placeholder="Nome">
-
-            <br><br>
-
-            <input
-                id="telefone"
-                type="text"
-                placeholder="Telefone">
-
-            <br><br>
-
-            <input
-                id="placa"
-                type="text"
-                placeholder="Placa">
-
-            <br><br>
-
-            <textarea
-                id="observacao"
-                placeholder="Observação"></textarea>
-
-            <br><br>
-
-            <button onclick="salvarCliente()">
-                Salvar Cliente
-            </button>
-
-            <hr style="margin:30px 0;">
-
-            <h2>
-                Clientes Cadastrados
-            </h2>
-
-            <input
-                id="pesquisa"
-                type="text"
-                placeholder="Pesquisar cliente"
-                onkeyup="filtrarClientes()">
-
-            <br><br>
-
-            <div id="lista-clientes"></div>
-
+        <div class="os-form-row">
+            <div class="os-form-group full-width">
+                <textarea id="observacao" placeholder="Observações"></textarea>
+            </div>
         </div>
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <br>
+    <button id="btn-salvar" onclick="salvarCliente()">💾 Salvar Cliente</button>
+    <button id="btn-cancelar" onclick="cancelarEdicao()" style="display:none;background:#6b7280;margin-left:10px;">❌ Cancelar</button>
 
-    <script src="../js/config.js"></script>
+    <hr style="margin:30px 0;">
 
-    <script src="../js/auth.js"></script>
+    <h2>Clientes Cadastrados</h2>
+    <input id="pesquisa" placeholder="🔍 Pesquisar por nome, placa ou telefone..." onkeyup="filtrarClientes()">
+    <br><br>
+    <div id="lista-clientes"></div>
 
-    <script src="../js/clientes.js"></script>
+</div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/clientes.js"></script>
 </body>
-
 </html>
