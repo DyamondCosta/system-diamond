@@ -4,14 +4,18 @@ let usuarioEditando = null;
 
 const perfilLabel = {
     'admin': 'Administrador',
+    'administrador': 'Administrador',
     'gerente': 'Gerente',
-    'funcionario': 'Funcionário'
+    'funcionario': 'Funcionário',
+    'funcionário': 'Funcionário'
 };
 
 const perfilCor = {
     'admin': '#ef4444',
+    'administrador': '#ef4444',
     'gerente': '#3b82f6',
-    'funcionario': '#10b981'
+    'funcionario': '#10b981',
+    'funcionário': '#10b981'
 };
 
 async function salvarUsuario() {
@@ -33,10 +37,9 @@ async function salvarUsuario() {
             .update(dados)
             .eq('id', usuarioEditando);
 
-        if (error) { alert('Erro ao atualizar usuário'); console.log(error); return; }
+        if (error) { alert('Erro ao atualizar usuário'); return; }
 
         alert('✅ Usuário atualizado!');
-        usuarioEditando = null;
         cancelarEdicao();
 
     } else {
@@ -44,7 +47,7 @@ async function salvarUsuario() {
             .from('usuarios')
             .insert([{ nome, email, senha, perfil, ativo: true }]);
 
-        if (error) { alert('Erro ao salvar usuário'); console.log(error); return; }
+        if (error) { alert('Erro ao salvar usuário'); return; }
         alert('✅ Usuário criado com sucesso!');
     }
 
@@ -78,8 +81,9 @@ async function carregarUsuarios() {
     lista.innerHTML = '';
 
     (data || []).forEach(usuario => {
-        const label = perfilLabel[usuario.perfil] || usuario.perfil;
-        const cor = perfilCor[usuario.perfil] || '#6b7280';
+        const chave = (usuario.perfil || '').toLowerCase().trim();
+        const label = perfilLabel[chave] || usuario.perfil;
+        const cor = perfilCor[chave] || '#6b7280';
 
         lista.innerHTML += `
         <div class="card">
@@ -114,7 +118,17 @@ async function editarUsuario(id) {
     document.getElementById('nome').value = data.nome || '';
     document.getElementById('email').value = data.email || '';
     document.getElementById('senha').value = '';
-    document.getElementById('perfil').value = data.perfil || 'funcionario';
+
+    // normaliza o perfil para o valor do select
+    const perfilNormalizado = (data.perfil || '').toLowerCase().trim();
+    const perfilMap = {
+        'admin': 'admin',
+        'administrador': 'admin',
+        'gerente': 'gerente',
+        'funcionario': 'funcionario',
+        'funcionário': 'funcionario'
+    };
+    document.getElementById('perfil').value = perfilMap[perfilNormalizado] || 'funcionario';
 
     document.getElementById('titulo-form').textContent = '✏️ Editando Usuário';
     document.getElementById('btn-salvar').textContent = '💾 Salvar Alterações';
