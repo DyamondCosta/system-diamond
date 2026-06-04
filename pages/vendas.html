@@ -1,144 +1,89 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Vendas</title>
-
 <link rel="stylesheet" href="../css/style.css">
-
 </head>
-
 <body>
 
-<div class="sidebar">
-
-<h2>🛞 Batalhão</h2>
-
-<p id="usuario-logado"></p>
-
-<a href="../index.html">Dashboard</a> <a href="clientes.html">Clientes</a> <a href="pneus.html">Pneus</a> <a href="servicos.html">Serviços</a> <a href="vendas.html">Vendas</a>
-
-<br>
-
-<button id="btn-sair">
-Sair
-</button>
-
-</div>
+<div class="sidebar"></div>
 
 <div class="main">
-
 <div class="header">
-
-<h1>
-💰 VENDAS
-</h1>
-
+    <h1>💰 VENDAS</h1>
+    <p>Venda de pneus e serviços</p>
 </div>
 
 <div class="container">
 
-<h2>
-Nova Venda
-</h2>
+    <h2>Nova Venda / Serviço</h2>
 
-<input
-id="cliente"
-placeholder="Cliente">
+    <!-- TIPO DE VENDA -->
+    <label><strong>Tipo:</strong></label><br><br>
+    <select id="tipo_venda" onchange="alternarTipo()">
+        <option value="pneu">🛞 Venda de Pneu</option>
+        <option value="servico">🔧 Serviço / Mão de Obra</option>
+    </select>
 
-<br><br>
+    <br><br>
 
-<select id="pneu_id">
+    <input id="cliente" placeholder="Nome do Cliente">
 
-<option value="">
-Selecione o Pneu
-</option>
+    <br><br>
 
-</select>
+    <!-- CAMPOS DE PNEU -->
+    <div id="campos-pneu">
+        <select id="pneu_id" onchange="preencherValorPneu()">
+            <option value="">Selecione o Pneu</option>
+        </select>
+        <br><br>
+        <input id="quantidade" type="number" placeholder="Quantidade" min="1" oninput="calcularTotalPneu()">
+        <br><br>
+        <input id="valor_total" type="number" placeholder="Valor Total (R$)">
+        <br><br>
+        <p id="info-lucro" style="color:green;font-weight:bold;"></p>
+    </div>
 
-<br><br>
+    <!-- CAMPOS DE SERVIÇO -->
+    <div id="campos-servico" style="display:none;">
+        <select id="servico_id" onchange="preencherValorServico()">
+            <option value="">Selecione o Serviço</option>
+        </select>
+        <br><br>
+        <input id="valor_servico" type="number" placeholder="Valor Cobrado (R$)">
+        <br><br>
+    </div>
 
-<input
-id="quantidade"
-type="number"
-placeholder="Quantidade">
+    <select id="forma_pagamento">
+        <option>PIX</option>
+        <option>Dinheiro</option>
+        <option>Cartão Débito</option>
+        <option>Cartão Crédito</option>
+    </select>
 
-<br><br>
+    <br><br>
 
-<input
-id="valor_total"
-type="number"
-placeholder="Valor Total">
+    <textarea id="observacao" placeholder="Observação"></textarea>
 
-<br><br>
+    <br><br>
 
-<select id="forma_pagamento">
+    <button onclick="salvarVenda()">💾 Salvar</button>
 
-<option>
-PIX
-</option>
+    <hr>
 
-<option>
-Dinheiro
-</option>
-
-<option>
-Cartão Débito
-</option>
-
-<option>
-Cartão Crédito
-</option>
-
-</select>
-
-<br><br>
-
-<textarea
-id="observacao"
-placeholder="Observação">
-</textarea>
-
-<br><br>
-
-<button onclick="salvarVenda()">
-
-Salvar Venda
-
-</button>
-
-<hr>
-
-<h2>
-Histórico de Vendas
-</h2>
-
-<input
-id="pesquisa"
-placeholder="Pesquisar Cliente"
-onkeyup="filtrarVendas()">
-
-<br><br>
-
-<div id="lista-vendas"></div>
+    <h2>Histórico</h2>
+    <input id="pesquisa" placeholder="Pesquisar Cliente" onkeyup="filtrarVendas()">
+    <br><br>
+    <div id="lista-vendas"></div>
 
 </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="../js/config.js"></script>
-
 <script src="../js/auth.js"></script>
-
 <script src="../js/vendas.js"></script>
-
 </body>
-
 </html>
