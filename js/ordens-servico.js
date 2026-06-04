@@ -24,11 +24,7 @@ async function salvarOS() {
                      valor_mao_obra, valor_pecas, valor_total, status, observacao})
             .eq('id', osEditando);
 
-        if(error){
-            console.log(error);
-            alert('Erro ao atualizar OS');
-            return;
-        }
+        if(error){ alert('Erro ao atualizar OS'); return; }
 
         alert('OS atualizada com sucesso');
         osEditando = null;
@@ -42,11 +38,7 @@ async function salvarOS() {
         .insert([{cliente_nome, telefone, placa, veiculo, servico,
                   valor_mao_obra, valor_pecas, valor_total, status, observacao}]);
 
-    if(error){
-        console.log(error);
-        alert('Erro ao salvar OS');
-        return;
-    }
+    if(error){ alert('Erro ao salvar OS'); return; }
 
     alert('OS salva com sucesso');
     limparCampos();
@@ -65,10 +57,7 @@ async function carregarOS() {
         .select('*')
         .order('id', {ascending:false});
 
-    if(error){
-        console.log(error);
-        return;
-    }
+    if(error){ console.log(error); return; }
 
     const lista = document.getElementById('lista-os');
     lista.innerHTML = '';
@@ -123,312 +112,136 @@ async function finalizarOS(id) {
         .update({status:'FINALIZADA'})
         .eq('id', id);
 
-    if(error){
-        console.log(error);
-        alert('Erro ao finalizar OS');
-        return;
-    }
-
+    if(error){ alert('Erro ao finalizar OS'); return; }
     carregarOS();
 }
 
 async function excluirOS(id){
-    const confirmar = confirm('Deseja excluir esta OS?');
-    if(!confirmar) return;
+    if(!confirm('Deseja excluir esta OS?')) return;
 
     const { error } = await clienteSupabase
         .from('ordens_servico')
         .delete()
         .eq('id', id);
 
-    if(error){
-        console.log(error);
-        alert('Erro ao excluir OS');
-        return;
-    }
-
+    if(error){ alert('Erro ao excluir OS'); return; }
     carregarOS();
 }
 
-/* GERAR PDF PROFISSIONAL */
+/* GERAR PDF COM LOGO */
+function carregarImagemBase64(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/jpeg'));
+        };
+        img.onerror = function() {
+            resolve(null); // se falhar, segue sem logo
+        };
+        img.src = url;
+    });
+}
+
 async function gerarPDFIndividual(id){
 
-    const { data: os } =
-    await clienteSupabase
-    .from('ordens_servico')
-    .select('*')
-    .eq('id', id)
-    .single();
+    const { data: os } = await clienteSupabase
+        .from('ordens_servico')
+        .select('*')
+        .eq('id', id)
+        .single();
 
     if(!os) return;
 
     const doc = new jspdf.jsPDF();
-
-    const hoje =
-    new Date()
-    .toLocaleDateString('pt-BR');
+    const hoje = new Date().toLocaleDateString('pt-BR');
 
     /* CABEÇALHO */
+    doc.setFillColor(15, 23, 42);
+    doc.rect(0, 0, 210, 35, 'F');
 
-    doc.setFillColor(15,23,42);
+    /* LOGO */
+    const logoBase64 = await carregarImagemBase64('../img/logo-batalhao.jpeg');
+    if(logoBase64) {
+        doc.addImage(logoBase64, 'JPEG', 12, 3, 28, 28);
+    }
 
-    doc.rect(
-        0,
-        0,
-        210,
-        30,
-        'F'
-    );
-
-    doc.setTextColor(255,255,255);
-
+    /* NOME DA EMPRESA ao lado da logo */
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
-
-    doc.text(
-        'BATALHÃO DOS PNEUS',
-        15,
-        18
-    );
-
+    doc.text('BATALHÃO DOS PNEUS', 46, 16);
     doc.setFontSize(10);
+    doc.text('Brasília - DF', 46, 24);
+    doc.setFontSize(9);
+    doc.text('Especialista em Pneus e Serviços Automotivos', 46, 31);
 
-    doc.text(
-        'Brasília - DF',
-        15,
-        24
-    );
-
-    doc.setTextColor(0,0,0);
+    doc.setTextColor(0, 0, 0);
 
     /* TÍTULO */
-
     doc.setFontSize(16);
-
-    doc.text(
-        `ORÇAMENTO Nº ${os.id}`,
-        15,
-        45
-    );
-
+    doc.text(`ORÇAMENTO Nº ${os.id}`, 15, 50);
     doc.setFontSize(10);
-
-    doc.text(
-        `Data: ${hoje}`,
-        160,
-        45
-    );
+    doc.text(`Data: ${hoje}`, 160, 50);
 
     /* CLIENTE */
-
-    doc.roundedRect(
-        10,
-        55,
-        190,
-        32,
-        3,
-        3
-    );
-
+    doc.roundedRect(10, 58, 190, 32, 3, 3);
     doc.setFontSize(12);
-
-    doc.text(
-        'DADOS DO CLIENTE',
-        15,
-        63
-    );
-
+    doc.text('DADOS DO CLIENTE', 15, 66);
     doc.setFontSize(10);
-
-    doc.text(
-        `Cliente: ${os.cliente_nome || ''}`,
-        15,
-        72
-    );
-
-    doc.text(
-        `Telefone: ${os.telefone || ''}`,
-        15,
-        80
-    );
+    doc.text(`Cliente: ${os.cliente_nome || ''}`, 15, 75);
+    doc.text(`Telefone: ${os.telefone || ''}`, 15, 83);
 
     /* VEÍCULO */
-
-    doc.roundedRect(
-        10,
-        95,
-        190,
-        28,
-        3,
-        3
-    );
-
+    doc.roundedRect(10, 97, 190, 28, 3, 3);
     doc.setFontSize(12);
-
-    doc.text(
-        'DADOS DO VEÍCULO',
-        15,
-        103
-    );
-
+    doc.text('DADOS DO VEÍCULO', 15, 105);
     doc.setFontSize(10);
-
-    doc.text(
-        `Placa: ${os.placa || ''}`,
-        15,
-        112
-    );
-
-    doc.text(
-        `Veículo: ${os.veiculo || ''}`,
-        90,
-        112
-    );
+    doc.text(`Placa: ${os.placa || ''}`, 15, 114);
+    doc.text(`Veículo: ${os.veiculo || ''}`, 90, 114);
 
     /* SERVIÇO */
-
-    doc.roundedRect(
-        10,
-        130,
-        190,
-        35,
-        3,
-        3
-    );
-
+    doc.roundedRect(10, 132, 190, 35, 3, 3);
     doc.setFontSize(12);
-
-    doc.text(
-        'SERVIÇO EXECUTADO',
-        15,
-        138
-    );
-
+    doc.text('SERVIÇO EXECUTADO', 15, 140);
     doc.setFontSize(10);
-
-    doc.text(
-        os.servico || '',
-        15,
-        148
-    );
+    doc.text(os.servico || '', 15, 150);
 
     /* FINANCEIRO */
-
-    doc.roundedRect(
-        10,
-        172,
-        190,
-        38,
-        3,
-        3
-    );
-
+    doc.roundedRect(10, 174, 190, 38, 3, 3);
     doc.setFontSize(12);
-
-    doc.text(
-        'RESUMO FINANCEIRO',
-        15,
-        180
-    );
-
+    doc.text('RESUMO FINANCEIRO', 15, 182);
     doc.setFontSize(10);
-
-    doc.text(
-        `Mão de Obra: R$ ${Number(os.valor_mao_obra || 0).toFixed(2)}`,
-        15,
-        190
-    );
-
-    doc.text(
-        `Peças: R$ ${Number(os.valor_pecas || 0).toFixed(2)}`,
-        15,
-        198
-    );
-
+    doc.text(`Mão de Obra: R$ ${Number(os.valor_mao_obra || 0).toFixed(2)}`, 15, 192);
+    doc.text(`Peças: R$ ${Number(os.valor_pecas || 0).toFixed(2)}`, 15, 200);
     doc.setFontSize(14);
-
-    doc.setTextColor(
-        22,
-        163,
-        74
-    );
-
-    doc.text(
-        `TOTAL: R$ ${Number(os.valor_total || 0).toFixed(2)}`,
-        120,
-        195
-    );
-
-    doc.setTextColor(0,0,0);
+    doc.setTextColor(22, 163, 74);
+    doc.text(`TOTAL: R$ ${Number(os.valor_total || 0).toFixed(2)}`, 120, 197);
+    doc.setTextColor(0, 0, 0);
 
     /* OBSERVAÇÕES */
-
-    doc.roundedRect(
-        10,
-        218,
-        190,
-        25,
-        3,
-        3
-    );
-
+    doc.roundedRect(10, 220, 190, 25, 3, 3);
     doc.setFontSize(12);
-
-    doc.text(
-        'OBSERVAÇÕES',
-        15,
-        226
-    );
-
+    doc.text('OBSERVAÇÕES', 15, 228);
     doc.setFontSize(10);
-
-    doc.text(
-        os.observacao || '-',
-        15,
-        235
-    );
+    doc.text(os.observacao || '-', 15, 237);
 
     /* ASSINATURAS */
-
-    doc.line(
-        20,
-        265,
-        90,
-        265
-    );
-
-    doc.text(
-        'Assinatura do Cliente',
-        25,
-        272
-    );
-
-    doc.line(
-        120,
-        265,
-        190,
-        265
-    );
-
-    doc.text(
-        'Responsável Técnico',
-        128,
-        272
-    );
+    doc.line(20, 265, 90, 265);
+    doc.text('Assinatura do Cliente', 25, 272);
+    doc.line(120, 265, 190, 265);
+    doc.text('Responsável Técnico', 128, 272);
 
     /* RODAPÉ */
-
     doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Batalhão dos Pneus - Brasília/DF', 68, 285);
 
-    doc.text(
-                     'Batalhão dos Pneus',
-        65,
-        285
-    );
-
-    doc.save(
-        `OS-${os.id}.pdf`
-    );
-
+    doc.save(`Orcamento-${os.id}.pdf`);
 }
 
 carregarOS();
