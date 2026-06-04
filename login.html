@@ -1,359 +1,286 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LC Solutions ERP</title>
+
 <style>
 
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-
-body {
-    min-height: 100vh;
-    background: #0a0f1a;
-    display: flex;
-    overflow: hidden;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
 }
 
-/* LADO ESQUERDO */
-.left-panel {
-    flex: 1;
-    background:
-        linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(15,23,42,0.85) 100%),
-        url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200') center/cover no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 60px;
-    position: relative;
-    overflow: hidden;
+body{
+
+min-height:100vh;
+
+background:
+linear-gradient(
+rgba(0,0,0,.75),
+rgba(0,0,0,.75)
+),
+url('https://images.unsplash.com/photo-1486006920555-c77dcf18193c');
+
+background-size:cover;
+background-position:center;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
 }
 
-.left-panel::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(255,152,0,0.15) 0%, transparent 70%);
-    pointer-events: none;
+.login-box{
+
+width:420px;
+
+background:#07111f;
+
+border:1px solid #ff9800;
+
+border-radius:20px;
+
+padding:30px;
+
+text-align:center;
+
+box-shadow:
+0 0 25px rgba(255,152,0,.3);
+
 }
 
-.brand-tag {
-    background: rgba(255,152,0,0.15);
-    border: 1px solid rgba(255,152,0,0.4);
-    color: #ff9800;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 30px;
+.system{
+
+color:white;
+
+font-size:24px;
+
+font-weight:bold;
+
 }
 
-.left-title {
-    font-size: 64px;
-    font-weight: 900;
-    color: white;
-    line-height: 1.1;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+.erp{
+
+color:#ff9800;
+
 }
 
-.left-title span {
-    color: #ff9800;
-    display: block;
+.powered{
+
+color:#c7c7c7;
+
+font-style:italic;
+
+font-size:13px;
+
+margin-top:5px;
+
+margin-bottom:20px;
+
 }
 
-.left-sub {
-    color: rgba(255,255,255,0.6);
-    font-size: 16px;
-    margin-bottom: 50px;
-    line-height: 1.6;
+.batalhao{
+
+font-size:52px;
+
+font-weight:900;
+
+color:white;
+
+line-height:50px;
+
+text-transform:uppercase;
+
 }
 
-.features {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.pneus{
+
+color:#ff9800;
+
 }
 
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    color: rgba(255,255,255,0.85);
-    font-size: 15px;
+.modulos{
+
+margin-top:15px;
+
+margin-bottom:20px;
+
+color:white;
+
+font-size:13px;
+
+line-height:20px;
+
 }
 
-.feature-icon {
-    width: 40px;
-    height: 40px;
-    background: rgba(255,152,0,0.15);
-    border: 1px solid rgba(255,152,0,0.3);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
+input{
+
+width:100%;
+
+padding:12px;
+
+margin-bottom:12px;
+
+border-radius:10px;
+
+border:1px solid #444;
+
+background:#0c1727;
+
+color:white;
+
+font-size:15px;
+
 }
 
-.bottom-badge {
-    position: absolute;
-    bottom: 30px;
-    left: 60px;
-    color: rgba(255,255,255,0.3);
-    font-size: 12px;
+button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+background:#ff9800;
+
+color:black;
+
+font-size:18px;
+
+font-weight:bold;
+
+cursor:pointer;
+
 }
 
-/* LADO DIREITO */
-.right-panel {
-    width: 460px;
-    background: #07111f;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 50px 45px;
-    position: relative;
-    border-left: 1px solid rgba(255,152,0,0.2);
+button:hover{
+
+background:#ffb74d;
+
 }
 
-.right-panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ff9800, transparent);
+.info{
+
+margin-top:20px;
+
+color:white;
+
+font-size:15px;
+
 }
 
-.logo-box {
-    text-align: center;
-    margin-bottom: 35px;
+.info span{
+
+color:#ff9800;
+
+font-weight:bold;
+
 }
 
-.logo-box img {
-    width: 90px;
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(255,152,0,0.3);
-    margin-bottom: 15px;
-}
+.footer{
 
-.logo-box .company {
-    color: white;
-    font-size: 20px;
-    font-weight: 700;
-}
+margin-top:25px;
 
-.logo-box .company span {
-    color: #ff9800;
-}
+color:#bdbdbd;
 
-.logo-box .tagline {
-    color: rgba(255,255,255,0.4);
-    font-size: 12px;
-    margin-top: 4px;
-    font-style: italic;
-}
+font-size:12px;
 
-.login-title {
-    color: white;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 6px;
-    text-align: center;
-}
-
-.login-subtitle {
-    color: rgba(255,255,255,0.4);
-    font-size: 14px;
-    margin-bottom: 35px;
-    text-align: center;
-}
-
-.input-group {
-    width: 100%;
-    margin-bottom: 18px;
-}
-
-.input-label {
-    color: rgba(255,255,255,0.6);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 14px 16px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    color: white;
-    font-size: 15px;
-    transition: all 0.3s;
-    outline: none;
-}
-
-.input-group input:focus {
-    border-color: #ff9800;
-    background: rgba(255,152,0,0.05);
-    box-shadow: 0 0 0 3px rgba(255,152,0,0.1);
-}
-
-.input-group input::placeholder {
-    color: rgba(255,255,255,0.25);
-}
-
-.btn-login {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #ff9800, #f57c00);
-    border: none;
-    border-radius: 10px;
-    color: #0a0f1a;
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 8px;
-    box-shadow: 0 4px 20px rgba(255,152,0,0.3);
-}
-
-.btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(255,152,0,0.5);
-    background: linear-gradient(135deg, #ffb74d, #ff9800);
-}
-
-.btn-login:active {
-    transform: translateY(0);
-}
-
-.divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(255,255,255,0.08);
-    margin: 30px 0;
-}
-
-.footer-login {
-    text-align: center;
-    color: rgba(255,255,255,0.25);
-    font-size: 12px;
-    line-height: 1.8;
-}
-
-.footer-login strong {
-    color: rgba(255,152,0,0.6);
-}
-
-/* RESPONSIVO */
-@media (max-width: 768px) {
-    .left-panel { display: none; }
-    .right-panel { width: 100%; padding: 40px 30px; }
 }
 
 </style>
+
 </head>
+
 <body>
 
-<!-- LADO ESQUERDO -->
-<div class="left-panel">
+<div class="login-box">
 
-    <div class="brand-tag">⚙️ LC Solutions ERP</div>
+<img
+src="img/logo-batalhao.jpeg"
+style="
+width:110px;
+margin-bottom:15px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(255,255,255,.2);
+">
 
-    <h1 class="left-title">
-        Batalhão
-        <span>dos Pneus</span>
-    </h1>
+<div class="system">
+LC Solutions <span class="erp">ERP</span>
+</div>
 
-    <p class="left-sub">
-        Sistema de gestão completo para<br>
-        sua borracharia. Simples, rápido<br>
-        e profissional.
-    </p>
+<div class="powered">
+Sistema desenvolvido por LC Solutions
+</div>
 
-    <div class="features">
-        <div class="feature-item">
-            <div class="feature-icon">🛞</div>
-            Controle de estoque de pneus em tempo real
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">💰</div>
-            Gestão financeira com lucro e faturamento
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">📋</div>
-            Orçamentos profissionais com geração de PDF
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">📅</div>
-            Agendamentos e controle de clientes
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">📊</div>
-            Dashboard com indicadores gerenciais
-        </div>
-    </div>
+<div class="batalhao">
 
-    <div class="bottom-badge">
-        LC Solutions ERP v1.0 • Desenvolvido por L. Costa
-    </div>
+BATALHÃO<br>
+
+<span class="pneus">
+DOS PNEUS
+</span>
 
 </div>
 
-<!-- LADO DIREITO -->
-<div class="right-panel">
+<div class="modulos">
 
-    <div class="logo-box">
-        <img src="img/logo-batalhao.jpeg" alt="Logo">
-        <div class="company">LC <span>Solutions</span></div>
-        <div class="tagline">Sistema desenvolvido por LC Solutions</div>
-    </div>
+📦 Gestão de Estoque<br>
+💰 Vendas • 🔧 Serviços • 📅 Agendamentos
 
-    <h2 class="login-title">Bem-vindo de volta!</h2>
-    <p class="login-subtitle">Faça login para acessar o sistema</p>
+</div>
 
-    <div class="input-group">
-        <label class="input-label">E-mail</label>
-        <input type="email" id="email" placeholder="seu@email.com">
-    </div>
+<input
+type="email"
+id="email"
+placeholder="Digite seu e-mail">
 
-    <div class="input-group">
-        <label class="input-label">Senha</label>
-        <input type="password" id="senha" placeholder="••••••••"
-            onkeydown="if(event.key==='Enter') fazerLogin()">
-    </div>
+<input
+type="password"
+id="senha"
+placeholder="Digite sua senha">
 
-    <button class="btn-login" onclick="fazerLogin()">
-        🔐 Entrar no Sistema
-    </button>
+<button onclick="fazerLogin()">
+ENTRAR NO SISTEMA
+</button>
 
-    <div class="divider"></div>
+<div class="info">
 
-    <div class="footer-login">
-        <strong>Batalhão dos Pneus</strong><br>
-        Gestão completa para sua oficina<br>
-        Mais controle, mais resultados!
-    </div>
+Gestão completa para sua oficina.
+
+<br>
+
+Mais controle, <span>mais resultados!</span>
+
+</div>
+
+<div class="footer">
+
+LC Solutions ERP v1.0
+
+<br>
+
+Desenvolvido por L. Costa
+
+</div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="js/config.js"></script>
+
 <script src="js/login.js"></script>
 
 </body>
+
 </html>
