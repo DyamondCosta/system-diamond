@@ -31,23 +31,48 @@ async function carregarDashboard() {
             .filter(item => item.tipo === 'SAIDA' && item.data_movimento >= primeiroDiaMes)
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
-        // LUCRO REAL DE HOJE
+        // ENTRADAS MANUAIS DE HOJE
+        // (entradas que NÃO vieram de venda — não contêm "Venda" na descrição)
+        const entradasManuaisHoje = (caixa || [])
+            .filter(item =>
+                item.tipo === 'ENTRADA' &&
+                item.data_movimento === hojeStr &&
+                !(item.descricao || '').toLowerCase().includes('venda') &&
+                !(item.descricao || '').toLowerCase().includes('serviço')
+            )
+            .reduce((total, item) => total + Number(item.valor || 0), 0);
+
+        // ENTRADAS MANUAIS DO MÊS
+        const entradasManuaisMes = (caixa || [])
+            .filter(item =>
+                item.tipo === 'ENTRADA' &&
+                item.data_movimento >= primeiroDiaMes &&
+                !(item.descricao || '').toLowerCase().includes('venda') &&
+                !(item.descricao || '').toLowerCase().includes('serviço')
+            )
+            .reduce((total, item) => total + Number(item.valor || 0), 0);
+
+        // LUCRO DE VENDAS DE HOJE
         const { data: vendasHoje } = await clienteSupabase
             .from('vendas')
             .select('lucro')
             .eq('data_venda', hojeStr);
 
-        const lucroHoje = (vendasHoje || [])
+        const lucroVendasHoje = (vendasHoje || [])
             .reduce((total, v) => total + Number(v.lucro || 0), 0);
 
-        // LUCRO DO MÊS
+        // LUCRO DE VENDAS DO MÊS
         const { data: vendasMes } = await clienteSupabase
             .from('vendas')
             .select('lucro')
             .gte('data_venda', primeiroDiaMes);
 
-        const lucroMes = (vendasMes || [])
+        const lucroVendasMes = (vendasMes || [])
             .reduce((total, v) => total + Number(v.lucro || 0), 0);
+
+        // LUCRO TOTAL = lucro vendas + entradas manuais - saídas
+        const lucroHoje = lucroVendasHoje + entradasManuaisHoje - saidasHoje;
+        const lucroMes = lucroVendasMes + entradasManuaisMes - saidasMes;
 
         // SERVIÇOS
         const { count: servicosTotal } = await clienteSupabase
