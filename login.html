@@ -18,102 +18,123 @@ body {
     background:#060c18;
 }
 
+/* FUNDO ESCURO */
 .bg {
     position:fixed;
     top:0; left:0; width:100%; height:100%;
     z-index:0;
-    background-image:
-        linear-gradient(135deg,
-            rgba(4,8,18,0.85) 0%,
-            rgba(6,12,24,0.72) 50%,
-            rgba(4,8,18,0.88) 100%),
-        url('https://images.unsplash.com/photo-1580339652462-4b7c2d83f1f5?w=1920&q=85&auto=format&fit=crop');
-    background-size:cover;
-    background-position:center;
-}
-.bg::after {
-    content:'';
-    position:absolute;
-    bottom:0; left:0; right:0; height:50%;
-    background:linear-gradient(to top, rgba(255,80,0,0.12), transparent);
+    background:
+        radial-gradient(ellipse at 50% 100%, rgba(255,100,0,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 0%, rgba(0,10,30,0.8) 0%, transparent 80%),
+        #060c18;
 }
 
+/* VINHETA */
 .vinheta {
     position:fixed;
     top:0; left:0; width:100%; height:100%;
-    z-index:0;
-    background:radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%);
+    z-index:1;
+    background:radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.7) 100%);
     pointer-events:none;
 }
 
-/* PNEUS GRANDES NOS LADOS */
-.pneu-esq {
+/* CARRO ESQUERDO */
+.carro-esq {
     position:fixed;
-    left:-120px; top:50%;
-    z-index:2; opacity:0.8;
-    animation:girar-esq 8s linear infinite;
+    left:0; bottom:0;
+    width:42vw;
+    height:65vh;
+    z-index:2;
+    background:
+        linear-gradient(to right, rgba(6,12,24,0) 60%, rgba(6,12,24,0.95) 100%),
+        linear-gradient(to top, rgba(6,12,24,0.3) 0%, rgba(6,12,24,0) 40%),
+        url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=90&auto=format&fit=crop') right center/cover no-repeat;
+    animation:car-float 4s ease-in-out infinite;
+    filter:saturate(1.1) brightness(0.85);
 }
-.pneu-dir {
+
+/* CARRO DIREITO */
+.carro-dir {
     position:fixed;
-    right:-120px; top:50%;
-    z-index:2; opacity:0.8;
-    animation:girar-dir 8s linear infinite;
+    right:0; bottom:0;
+    width:42vw;
+    height:65vh;
+    z-index:2;
+    background:
+        linear-gradient(to left, rgba(6,12,24,0) 60%, rgba(6,12,24,0.95) 100%),
+        linear-gradient(to top, rgba(6,12,24,0.3) 0%, rgba(6,12,24,0) 40%),
+        url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=900&q=90&auto=format&fit=crop') left center/cover no-repeat;
+    animation:car-float 4s ease-in-out infinite;
+    animation-delay:0.7s;
+    filter:saturate(1.1) brightness(0.85);
+    transform:scaleX(-1);
 }
-@keyframes girar-esq {
-    from { transform:translateY(-50%) rotate(0deg); }
-    to   { transform:translateY(-50%) rotate(360deg); }
+
+/* BRILHO DOS FARÓIS */
+.carro-esq::after {
+    content:'';
+    position:absolute;
+    right:-20px; top:30%;
+    width:120px; height:80px;
+    background:radial-gradient(ellipse, rgba(255,220,100,0.25) 0%, transparent 70%);
+    animation:farol-glow 2.5s ease-in-out infinite;
 }
-@keyframes girar-dir {
-    from { transform:translateY(-50%) rotate(0deg); }
-    to   { transform:translateY(-50%) rotate(-360deg); }
+.carro-dir::after {
+    content:'';
+    position:absolute;
+    left:-20px; top:30%;
+    width:120px; height:80px;
+    background:radial-gradient(ellipse, rgba(255,220,100,0.25) 0%, transparent 70%);
+    animation:farol-glow 2.5s ease-in-out infinite;
+    animation-delay:0.5s;
+}
+
+@keyframes car-float {
+    0%,100% { transform:translateY(0); }
+    50%      { transform:translateY(-10px); }
+}
+
+/* Corrigir espelhamento do carro direito com float */
+.carro-dir {
+    animation:car-float-dir 4s ease-in-out infinite;
+    animation-delay:0.7s;
+}
+@keyframes car-float-dir {
+    0%,100% { transform:scaleX(-1) translateY(0); }
+    50%      { transform:scaleX(-1) translateY(-10px); }
+}
+
+@keyframes farol-glow {
+    0%,100% { opacity:0.6; transform:scale(1); }
+    50%      { opacity:1; transform:scale(1.15); }
+}
+
+/* LINHA DO CHÃO */
+.ground {
+    position:fixed;
+    bottom:0; left:0; right:0;
+    height:3px;
+    z-index:3;
+    background:linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,152,0,0.2) 15%,
+        rgba(255,152,0,0.6) 50%,
+        rgba(255,152,0,0.2) 85%,
+        transparent 100%);
+    box-shadow:0 0 20px rgba(255,152,0,0.3);
 }
 
 /* PNEUS CANTOS */
-.pneu-canto { position:fixed; z-index:2; opacity:0.35; }
-.pneu-canto.tl { top:-55px; left:-55px; animation:rot 14s linear infinite; }
-.pneu-canto.tr { top:-55px; right:-55px; animation:rot-r 14s linear infinite; }
-.pneu-canto.bl { bottom:-55px; left:-55px; animation:rot-r 14s linear infinite; }
-.pneu-canto.br { bottom:-55px; right:-55px; animation:rot 14s linear infinite; }
+.pneu-canto { position:fixed; z-index:4; opacity:0.3; }
+.pneu-canto.tl { top:-50px; left:-50px; animation:rot 14s linear infinite; }
+.pneu-canto.tr { top:-50px; right:-50px; animation:rot-r 14s linear infinite; }
+.pneu-canto.bl { bottom:-50px; left:-50px; animation:rot-r 14s linear infinite; }
+.pneu-canto.br { bottom:-50px; right:-50px; animation:rot 14s linear infinite; }
 @keyframes rot   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 @keyframes rot-r { from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
 
-/* CARROS NA PARTE INFERIOR */
-.carro-esq {
-    position:fixed;
-    bottom:0; left:-40px;
-    z-index:3;
-    animation:bounce 3.5s ease-in-out infinite;
-    filter:drop-shadow(0 10px 30px rgba(255,152,0,0.2));
-}
-.carro-dir {
-    position:fixed;
-    bottom:0; right:-40px;
-    z-index:3;
-    animation:bounce 3.5s ease-in-out infinite;
-    animation-delay:0.8s;
-    filter:drop-shadow(0 10px 30px rgba(255,152,0,0.2));
-}
-@keyframes bounce {
-    0%,100% { transform:translateY(0); }
-    50%      { transform:translateY(-8px); }
-}
-
-/* FARÓIS PULSANDO */
-.farol-luz { animation:farol 2.5s ease-in-out infinite; }
-@keyframes farol {
-    0%,100% { opacity:0.6; }
-    50%      { opacity:1; }
-}
-
-/* RODAS GIRANDO */
-.roda-gira { animation:roda 1.2s linear infinite; }
-@keyframes roda {
-    from { transform:rotate(0deg); }
-    to   { transform:rotate(360deg); }
-}
-
 /* PARTÍCULAS */
-.particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+.particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:3; pointer-events:none; }
 .particle { position:absolute; width:2px; height:2px; background:#ff9800; border-radius:50%; opacity:0; animation:float 7s infinite; }
 .particle:nth-child(1) { left:5%;  animation-delay:0s;   animation-duration:8s; }
 .particle:nth-child(2) { left:15%; animation-delay:1.2s; animation-duration:6s; }
@@ -133,15 +154,18 @@ body {
 /* LOGIN BOX */
 .login-box {
     width:420px;
-    background:rgba(4,10,22,0.9);
+    background:rgba(4,10,22,0.92);
     border:1px solid rgba(255,152,0,0.35);
     border-radius:20px;
     padding:32px;
     text-align:center;
-    box-shadow: 0 0 0 1px rgba(255,152,0,0.07), 0 30px 80px rgba(0,0,0,0.9), 0 0 100px rgba(255,100,0,0.08);
+    box-shadow:
+        0 0 0 1px rgba(255,152,0,0.07),
+        0 30px 80px rgba(0,0,0,0.95),
+        0 0 100px rgba(255,100,0,0.08);
     position:relative;
     z-index:10;
-    backdrop-filter:blur(18px);
+    backdrop-filter:blur(20px);
 }
 .login-box::before {
     content:'';
@@ -155,6 +179,7 @@ body {
     bottom:0; left:20%; right:20%; height:1px;
     background:linear-gradient(90deg, transparent, rgba(255,152,0,0.2), transparent);
 }
+
 .system { color:white; font-size:23px; font-weight:800; letter-spacing:2px; }
 .erp { color:#ff9800; }
 .powered { color:rgba(255,255,255,0.28); font-style:italic; font-size:11px; margin-top:4px; margin-bottom:16px; }
@@ -162,12 +187,15 @@ body {
 .pneus { color:#ff9800; text-shadow:0 0 30px rgba(255,152,0,0.35); }
 .modulos { margin-top:14px; margin-bottom:18px; color:rgba(255,255,255,0.4); font-size:12px; line-height:22px; }
 .divider { height:1px; background:linear-gradient(90deg, transparent, rgba(255,152,0,0.25), transparent); margin:16px 0; }
+
 input { width:100%; padding:13px 16px; margin-bottom:11px; border-radius:10px; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.04); color:white; font-size:14px; transition:all 0.3s; }
 input:focus { outline:none; border-color:rgba(255,152,0,0.55); background:rgba(255,152,0,0.04); box-shadow:0 0 0 3px rgba(255,152,0,0.07); }
 input::placeholder { color:rgba(255,255,255,0.22); }
+
 button { width:100%; padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg, #ff9800, #e65c00); color:#07111f; font-size:16px; font-weight:800; cursor:pointer; transition:all 0.3s; letter-spacing:1px; text-transform:uppercase; box-shadow:0 4px 25px rgba(255,152,0,0.35); }
 button:hover { transform:translateY(-2px); box-shadow:0 8px 35px rgba(255,152,0,0.55); }
 button:active { transform:translateY(0); }
+
 .info { margin-top:16px; color:rgba(255,255,255,0.38); font-size:13px; line-height:1.9; }
 .info span { color:#ff9800; font-weight:700; }
 .footer { margin-top:18px; color:rgba(255,255,255,0.14); font-size:11px; line-height:1.8; }
@@ -179,282 +207,17 @@ button:active { transform:translateY(0); }
 <div class="bg"></div>
 <div class="vinheta"></div>
 
-<!-- PNEU GIGANTE ESQUERDO -->
-<div class="pneu-esq">
-<svg width="360" height="360" viewBox="0 0 360 360" fill="none">
-    <circle cx="180" cy="180" r="175" fill="#0d1220" stroke="rgba(255,152,0,0.5)" stroke-width="3"/>
-    <circle cx="180" cy="180" r="175" fill="none" stroke="rgba(255,152,0,0.07)" stroke-width="24" stroke-dasharray="8 5"/>
-    <circle cx="180" cy="180" r="132" fill="#111825" stroke="rgba(255,152,0,0.3)" stroke-width="2"/>
-    <circle cx="180" cy="180" r="108" fill="#0d1520" stroke="rgba(255,152,0,0.15)" stroke-width="1.5"/>
-    <circle cx="180" cy="180" r="33" fill="#1a2035" stroke="rgba(255,152,0,0.7)" stroke-width="3"/>
-    <circle cx="180" cy="180" r="13" fill="#ff9800"/>
-    <circle cx="180" cy="180" r="6" fill="#0d1220"/>
-    <line x1="180" y1="48" x2="180" y2="147" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="180" y1="213" x2="180" y2="312" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="48" y1="180" x2="147" y2="180" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="213" y1="180" x2="312" y2="180" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="84" y1="84" x2="154" y2="154" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="206" y1="206" x2="276" y2="276" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="276" y1="84" x2="206" y2="154" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="154" y1="206" x2="84" y2="276" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="180" cy="68" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="180" cy="292" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="68" cy="180" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="292" cy="180" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="101" cy="101" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="259" cy="259" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="259" cy="101" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="101" cy="259" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-</svg>
-</div>
+<!-- CARROS REAIS -->
+<div class="carro-esq"></div>
+<div class="carro-dir"></div>
 
-<!-- PNEU GIGANTE DIREITO -->
-<div class="pneu-dir">
-<svg width="360" height="360" viewBox="0 0 360 360" fill="none">
-    <circle cx="180" cy="180" r="175" fill="#0d1220" stroke="rgba(255,152,0,0.5)" stroke-width="3"/>
-    <circle cx="180" cy="180" r="175" fill="none" stroke="rgba(255,152,0,0.07)" stroke-width="24" stroke-dasharray="8 5"/>
-    <circle cx="180" cy="180" r="132" fill="#111825" stroke="rgba(255,152,0,0.3)" stroke-width="2"/>
-    <circle cx="180" cy="180" r="108" fill="#0d1520" stroke="rgba(255,152,0,0.15)" stroke-width="1.5"/>
-    <circle cx="180" cy="180" r="33" fill="#1a2035" stroke="rgba(255,152,0,0.7)" stroke-width="3"/>
-    <circle cx="180" cy="180" r="13" fill="#ff9800"/>
-    <circle cx="180" cy="180" r="6" fill="#0d1220"/>
-    <line x1="180" y1="48" x2="180" y2="147" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="180" y1="213" x2="180" y2="312" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="48" y1="180" x2="147" y2="180" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="213" y1="180" x2="312" y2="180" stroke="rgba(255,152,0,0.6)" stroke-width="5" stroke-linecap="round"/>
-    <line x1="84" y1="84" x2="154" y2="154" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="206" y1="206" x2="276" y2="276" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="276" y1="84" x2="206" y2="154" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="154" y1="206" x2="84" y2="276" stroke="rgba(255,152,0,0.4)" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="180" cy="68" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="180" cy="292" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="68" cy="180" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="292" cy="180" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="101" cy="101" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="259" cy="259" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="259" cy="101" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-    <circle cx="101" cy="259" r="7" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/>
-</svg>
-</div>
+<div class="ground"></div>
 
 <!-- PNEUS CANTOS -->
-<div class="pneu-canto tl"><svg width="150" height="150" viewBox="0 0 150 150" fill="none"><circle cx="75" cy="75" r="71" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="75" cy="75" r="52" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="75" cy="75" r="17" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="75" cy="75" r="6" fill="#ff9800"/><line x1="75" y1="23" x2="75" y2="58" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="75" y1="92" x2="75" y2="127" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="23" y1="75" x2="58" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="92" y1="75" x2="127" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/></svg></div>
-<div class="pneu-canto tr"><svg width="150" height="150" viewBox="0 0 150 150" fill="none"><circle cx="75" cy="75" r="71" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="75" cy="75" r="52" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="75" cy="75" r="17" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="75" cy="75" r="6" fill="#ff9800"/><line x1="75" y1="23" x2="75" y2="58" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="75" y1="92" x2="75" y2="127" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="23" y1="75" x2="58" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="92" y1="75" x2="127" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/></svg></div>
-<div class="pneu-canto bl"><svg width="150" height="150" viewBox="0 0 150 150" fill="none"><circle cx="75" cy="75" r="71" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="75" cy="75" r="52" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="75" cy="75" r="17" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="75" cy="75" r="6" fill="#ff9800"/><line x1="75" y1="23" x2="75" y2="58" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="75" y1="92" x2="75" y2="127" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="23" y1="75" x2="58" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="92" y1="75" x2="127" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/></svg></div>
-<div class="pneu-canto br"><svg width="150" height="150" viewBox="0 0 150 150" fill="none"><circle cx="75" cy="75" r="71" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="75" cy="75" r="52" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="75" cy="75" r="17" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="75" cy="75" r="6" fill="#ff9800"/><line x1="75" y1="23" x2="75" y2="58" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="75" y1="92" x2="75" y2="127" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="23" y1="75" x2="58" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="92" y1="75" x2="127" y2="75" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/></svg></div>
-
-<!-- CARRO ESPORTIVO ESQUERDO -->
-<div class="carro-esq">
-<svg width="420" height="200" viewBox="0 0 420 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-        <linearGradient id="corpo-esq" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2a3550"/>
-            <stop offset="100%" stop-color="#0d1525"/>
-        </linearGradient>
-        <linearGradient id="vidro-esq" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="rgba(120,180,255,0.25)"/>
-            <stop offset="100%" stop-color="rgba(60,100,200,0.1)"/>
-        </linearGradient>
-        <filter id="brilho-esq">
-            <feGaussianBlur stdDeviation="5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <radialGradient id="luz-esq" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(255,220,100,0.9)"/>
-            <stop offset="100%" stop-color="rgba(255,150,0,0.3)"/>
-        </radialGradient>
-    </defs>
-
-    <!-- Sombra no chão -->
-    <ellipse cx="210" cy="192" rx="190" ry="8" fill="rgba(0,0,0,0.5)"/>
-
-    <!-- Corpo baixo do carro -->
-    <path d="M15 155 L15 130 Q18 118 35 108 L80 90 Q105 78 150 72 L260 72 Q300 72 330 85 L370 108 Q390 118 400 130 L400 155 Z"
-        fill="url(#corpo-esq)" stroke="rgba(255,152,0,0.4)" stroke-width="1.5"/>
-
-    <!-- Detalhe lateral laranja -->
-    <path d="M15 132 L400 132 L400 140 L15 140 Z" fill="rgba(255,152,0,0.35)"/>
-
-    <!-- Capô aerodinâmico -->
-    <path d="M260 72 L330 85 L370 108 L340 108 L305 88 L260 78 Z"
-        fill="#1a2540" stroke="rgba(255,152,0,0.25)" stroke-width="1"/>
-
-    <!-- Spoiler traseiro -->
-    <path d="M15 108 L15 90 Q20 80 35 78 L60 75 L80 90 L55 95 L30 100 Z"
-        fill="#141e30" stroke="rgba(255,152,0,0.2)" stroke-width="1"/>
-
-    <!-- Teto cupê -->
-    <path d="M95 72 Q120 52 160 45 L240 42 Q275 42 295 55 L315 72 Z"
-        fill="#0f1828" stroke="rgba(255,152,0,0.3)" stroke-width="1.5"/>
-
-    <!-- Vidro dianteiro -->
-    <path d="M255 72 L295 55 L315 72 Z"
-        fill="url(#vidro-esq)" stroke="rgba(120,180,255,0.4)" stroke-width="1"/>
-
-    <!-- Vidro traseiro -->
-    <path d="M95 72 L120 55 L160 48 L150 72 Z"
-        fill="url(#vidro-esq)" stroke="rgba(120,180,255,0.3)" stroke-width="1"/>
-
-    <!-- Vidro lateral -->
-    <path d="M150 72 L160 48 L240 42 L255 72 Z"
-        fill="rgba(80,130,220,0.12)" stroke="rgba(120,180,255,0.25)" stroke-width="1"/>
-
-    <!-- Entrada de ar no capô -->
-    <path d="M290 80 L320 90 L318 97 L288 87 Z" fill="rgba(0,0,0,0.4)" stroke="rgba(255,152,0,0.2)" stroke-width="0.5"/>
-
-    <!-- Para-choque dianteiro aerodinâmico -->
-    <path d="M370 108 L400 118 L405 140 L405 155 L368 155 L368 130 Z"
-        fill="#0d1422" stroke="rgba(255,152,0,0.4)" stroke-width="1.5"/>
-
-    <!-- Entrada de ar dianteira -->
-    <path d="M372 120 L400 125 L400 135 L372 130 Z" fill="rgba(0,0,0,0.6)" stroke="rgba(255,152,0,0.2)" stroke-width="0.5"/>
-
-    <!-- Para-choque traseiro -->
-    <path d="M15 108 L5 118 L3 155 L18 155 L18 130 Z"
-        fill="#0d1422" stroke="rgba(255,152,0,0.3)" stroke-width="1"/>
-
-    <!-- FAROL DIANTEIRO LED -->
-    <g class="farol-luz">
-        <path d="M370 95 L402 100 L404 118 L370 112 Z"
-            fill="url(#luz-esq)" stroke="rgba(255,200,0,0.6)" stroke-width="1"/>
-        <line x1="378" y1="98" x2="402" y2="102" stroke="rgba(255,255,200,0.8)" stroke-width="1.5"/>
-        <line x1="378" y1="103" x2="402" y2="107" stroke="rgba(255,255,200,0.6)" stroke-width="1"/>
-        <line x1="378" y1="108" x2="402" y2="113" stroke="rgba(255,255,200,0.4)" stroke-width="0.8"/>
-        <!-- Luz projetada -->
-        <path d="M405 100 L480 70 L480 130 L405 120 Z" fill="rgba(255,220,80,0.05)"/>
-    </g>
-
-    <!-- Lanterna traseira LED -->
-    <g class="farol-luz">
-        <rect x="5" y="95" width="14" height="14" rx="2" fill="rgba(255,40,40,0.9)" stroke="rgba(255,100,100,0.5)" stroke-width="1"/>
-        <line x1="7" y1="98" x2="17" y2="98" stroke="rgba(255,180,180,0.7)" stroke-width="1"/>
-        <line x1="7" y1="102" x2="17" y2="102" stroke="rgba(255,180,180,0.5)" stroke-width="1"/>
-        <line x1="7" y1="106" x2="17" y2="106" stroke="rgba(255,180,180,0.3)" stroke-width="1"/>
-    </g>
-
-    <!-- RODA TRASEIRA -->
-    <g transform="translate(88,158)">
-        <circle r="36" fill="#080e1a" stroke="rgba(255,152,0,0.6)" stroke-width="2.5"/>
-        <circle r="36" fill="none" stroke="rgba(255,152,0,0.08)" stroke-width="12" stroke-dasharray="4 3"/>
-        <circle r="26" fill="#0f1825" stroke="rgba(255,152,0,0.3)" stroke-width="1.5"/>
-        <circle r="11" fill="#1a2540" stroke="rgba(255,152,0,0.8)" stroke-width="2.5"/>
-        <circle r="5" fill="#ff9800"/>
-        <circle r="2.5" fill="#080e1a"/>
-        <g class="roda-gira">
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-24" y1="0" x2="24" y2="0" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-17" y1="-17" x2="17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="17" y1="-17" x2="-17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="0" cy="-20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="0" cy="20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="-20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-        </g>
-    </g>
-
-    <!-- RODA DIANTEIRA -->
-    <g transform="translate(328,158)">
-        <circle r="36" fill="#080e1a" stroke="rgba(255,152,0,0.6)" stroke-width="2.5"/>
-        <circle r="36" fill="none" stroke="rgba(255,152,0,0.08)" stroke-width="12" stroke-dasharray="4 3"/>
-        <circle r="26" fill="#0f1825" stroke="rgba(255,152,0,0.3)" stroke-width="1.5"/>
-        <circle r="11" fill="#1a2540" stroke="rgba(255,152,0,0.8)" stroke-width="2.5"/>
-        <circle r="5" fill="#ff9800"/>
-        <circle r="2.5" fill="#080e1a"/>
-        <g class="roda-gira">
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-24" y1="0" x2="24" y2="0" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-17" y1="-17" x2="17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="17" y1="-17" x2="-17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="0" cy="-20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="0" cy="20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="-20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-        </g>
-    </g>
-</svg>
-</div>
-
-<!-- CARRO ESPORTIVO DIREITO (espelhado) -->
-<div class="carro-dir">
-<svg width="420" height="200" viewBox="0 0 420 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(-1)">
-    <defs>
-        <linearGradient id="corpo-dir" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2a3550"/>
-            <stop offset="100%" stop-color="#0d1525"/>
-        </linearGradient>
-        <linearGradient id="vidro-dir" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="rgba(120,180,255,0.25)"/>
-            <stop offset="100%" stop-color="rgba(60,100,200,0.1)"/>
-        </linearGradient>
-        <radialGradient id="luz-dir" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(255,220,100,0.9)"/>
-            <stop offset="100%" stop-color="rgba(255,150,0,0.3)"/>
-        </radialGradient>
-    </defs>
-    <ellipse cx="210" cy="192" rx="190" ry="8" fill="rgba(0,0,0,0.5)"/>
-    <path d="M15 155 L15 130 Q18 118 35 108 L80 90 Q105 78 150 72 L260 72 Q300 72 330 85 L370 108 Q390 118 400 130 L400 155 Z" fill="url(#corpo-dir)" stroke="rgba(255,152,0,0.4)" stroke-width="1.5"/>
-    <path d="M15 132 L400 132 L400 140 L15 140 Z" fill="rgba(255,152,0,0.35)"/>
-    <path d="M260 72 L330 85 L370 108 L340 108 L305 88 L260 78 Z" fill="#1a2540" stroke="rgba(255,152,0,0.25)" stroke-width="1"/>
-    <path d="M15 108 L15 90 Q20 80 35 78 L60 75 L80 90 L55 95 L30 100 Z" fill="#141e30" stroke="rgba(255,152,0,0.2)" stroke-width="1"/>
-    <path d="M95 72 Q120 52 160 45 L240 42 Q275 42 295 55 L315 72 Z" fill="#0f1828" stroke="rgba(255,152,0,0.3)" stroke-width="1.5"/>
-    <path d="M255 72 L295 55 L315 72 Z" fill="url(#vidro-dir)" stroke="rgba(120,180,255,0.4)" stroke-width="1"/>
-    <path d="M95 72 L120 55 L160 48 L150 72 Z" fill="url(#vidro-dir)" stroke="rgba(120,180,255,0.3)" stroke-width="1"/>
-    <path d="M150 72 L160 48 L240 42 L255 72 Z" fill="rgba(80,130,220,0.12)" stroke="rgba(120,180,255,0.25)" stroke-width="1"/>
-    <path d="M290 80 L320 90 L318 97 L288 87 Z" fill="rgba(0,0,0,0.4)" stroke="rgba(255,152,0,0.2)" stroke-width="0.5"/>
-    <path d="M370 108 L400 118 L405 140 L405 155 L368 155 L368 130 Z" fill="#0d1422" stroke="rgba(255,152,0,0.4)" stroke-width="1.5"/>
-    <path d="M372 120 L400 125 L400 135 L372 130 Z" fill="rgba(0,0,0,0.6)" stroke="rgba(255,152,0,0.2)" stroke-width="0.5"/>
-    <path d="M15 108 L5 118 L3 155 L18 155 L18 130 Z" fill="#0d1422" stroke="rgba(255,152,0,0.3)" stroke-width="1"/>
-    <g class="farol-luz">
-        <path d="M370 95 L402 100 L404 118 L370 112 Z" fill="url(#luz-dir)" stroke="rgba(255,200,0,0.6)" stroke-width="1"/>
-        <line x1="378" y1="98" x2="402" y2="102" stroke="rgba(255,255,200,0.8)" stroke-width="1.5"/>
-        <line x1="378" y1="103" x2="402" y2="107" stroke="rgba(255,255,200,0.6)" stroke-width="1"/>
-        <line x1="378" y1="108" x2="402" y2="113" stroke="rgba(255,255,200,0.4)" stroke-width="0.8"/>
-        <path d="M405 100 L480 70 L480 130 L405 120 Z" fill="rgba(255,220,80,0.05)"/>
-    </g>
-    <g class="farol-luz">
-        <rect x="5" y="95" width="14" height="14" rx="2" fill="rgba(255,40,40,0.9)" stroke="rgba(255,100,100,0.5)" stroke-width="1"/>
-        <line x1="7" y1="98" x2="17" y2="98" stroke="rgba(255,180,180,0.7)" stroke-width="1"/>
-        <line x1="7" y1="102" x2="17" y2="102" stroke="rgba(255,180,180,0.5)" stroke-width="1"/>
-        <line x1="7" y1="106" x2="17" y2="106" stroke="rgba(255,180,180,0.3)" stroke-width="1"/>
-    </g>
-    <g transform="translate(88,158)">
-        <circle r="36" fill="#080e1a" stroke="rgba(255,152,0,0.6)" stroke-width="2.5"/>
-        <circle r="36" fill="none" stroke="rgba(255,152,0,0.08)" stroke-width="12" stroke-dasharray="4 3"/>
-        <circle r="26" fill="#0f1825" stroke="rgba(255,152,0,0.3)" stroke-width="1.5"/>
-        <circle r="11" fill="#1a2540" stroke="rgba(255,152,0,0.8)" stroke-width="2.5"/>
-        <circle r="5" fill="#ff9800"/>
-        <circle r="2.5" fill="#080e1a"/>
-        <g class="roda-gira">
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-24" y1="0" x2="24" y2="0" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-17" y1="-17" x2="17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="17" y1="-17" x2="-17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="0" cy="-20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="0" cy="20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="-20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-        </g>
-    </g>
-    <g transform="translate(328,158)">
-        <circle r="36" fill="#080e1a" stroke="rgba(255,152,0,0.6)" stroke-width="2.5"/>
-        <circle r="36" fill="none" stroke="rgba(255,152,0,0.08)" stroke-width="12" stroke-dasharray="4 3"/>
-        <circle r="26" fill="#0f1825" stroke="rgba(255,152,0,0.3)" stroke-width="1.5"/>
-        <circle r="11" fill="#1a2540" stroke="rgba(255,152,0,0.8)" stroke-width="2.5"/>
-        <circle r="5" fill="#ff9800"/>
-        <circle r="2.5" fill="#080e1a"/>
-        <g class="roda-gira">
-            <line x1="0" y1="-24" x2="0" y2="24" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-24" y1="0" x2="24" y2="0" stroke="rgba(255,152,0,0.55)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="-17" y1="-17" x2="17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="17" y1="-17" x2="-17" y2="17" stroke="rgba(255,152,0,0.35)" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="0" cy="-20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="0" cy="20" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="-20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-            <circle cx="20" cy="0" r="3" fill="#1a2540" stroke="rgba(255,152,0,0.5)" stroke-width="1.5"/>
-        </g>
-    </g>
-</svg>
-</div>
+<div class="pneu-canto tl"><svg width="140" height="140" viewBox="0 0 140 140" fill="none"><circle cx="70" cy="70" r="66" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="70" cy="70" r="48" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="70" cy="70" r="16" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="70" cy="70" r="6" fill="#ff9800"/><line x1="70" y1="22" x2="70" y2="54" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="70" y1="86" x2="70" y2="118" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="22" y1="70" x2="54" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="86" y1="70" x2="118" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="40" x2="56" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="84" y1="84" x2="100" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="100" y1="40" x2="84" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="84" x2="40" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div>
+<div class="pneu-canto tr"><svg width="140" height="140" viewBox="0 0 140 140" fill="none"><circle cx="70" cy="70" r="66" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="70" cy="70" r="48" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="70" cy="70" r="16" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="70" cy="70" r="6" fill="#ff9800"/><line x1="70" y1="22" x2="70" y2="54" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="70" y1="86" x2="70" y2="118" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="22" y1="70" x2="54" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="86" y1="70" x2="118" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="40" x2="56" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="84" y1="84" x2="100" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="100" y1="40" x2="84" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="84" x2="40" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div>
+<div class="pneu-canto bl"><svg width="140" height="140" viewBox="0 0 140 140" fill="none"><circle cx="70" cy="70" r="66" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="70" cy="70" r="48" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="70" cy="70" r="16" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="70" cy="70" r="6" fill="#ff9800"/><line x1="70" y1="22" x2="70" y2="54" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="70" y1="86" x2="70" y2="118" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="22" y1="70" x2="54" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="86" y1="70" x2="118" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="40" x2="56" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="84" y1="84" x2="100" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="100" y1="40" x2="84" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="84" x2="40" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div>
+<div class="pneu-canto br"><svg width="140" height="140" viewBox="0 0 140 140" fill="none"><circle cx="70" cy="70" r="66" fill="#0d1220" stroke="rgba(255,152,0,0.3)" stroke-width="2"/><circle cx="70" cy="70" r="48" fill="#111825" stroke="rgba(255,152,0,0.2)" stroke-width="1.5"/><circle cx="70" cy="70" r="16" fill="#1a2035" stroke="rgba(255,152,0,0.5)" stroke-width="2"/><circle cx="70" cy="70" r="6" fill="#ff9800"/><line x1="70" y1="22" x2="70" y2="54" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="70" y1="86" x2="70" y2="118" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="22" y1="70" x2="54" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="86" y1="70" x2="118" y2="70" stroke="rgba(255,152,0,0.4)" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="40" x2="56" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="84" y1="84" x2="100" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="100" y1="40" x2="84" y2="56" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="84" x2="40" y2="100" stroke="rgba(255,152,0,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div>
 
 <div class="particles">
     <div class="particle"></div>
