@@ -18,124 +18,115 @@ body {
     background:#060c18;
 }
 
-/* FUNDO ESCURO */
-.bg {
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    z-index:0;
-    background:
-        radial-gradient(ellipse at 50% 100%, rgba(255,100,0,0.1) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 0%, rgba(0,10,30,0.8) 0%, transparent 80%),
-        #060c18;
-}
-
-/* VINHETA */
-.vinheta {
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    z-index:1;
-    background:radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.7) 100%);
-    pointer-events:none;
-}
-
-/* CARRO ESQUERDO */
+/* CARRO ESQUERDO — preenche metade esquerda */
 .carro-esq {
     position:fixed;
-    left:0; bottom:0;
-    width:42vw;
-    height:65vh;
-    z-index:2;
+    left:0; top:0;
+    width:50vw; height:100vh;
+    z-index:1;
     background:
-        linear-gradient(to right, rgba(6,12,24,0) 60%, rgba(6,12,24,0.95) 100%),
-        linear-gradient(to top, rgba(6,12,24,0.3) 0%, rgba(6,12,24,0) 40%),
-        url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=90&auto=format&fit=crop') right center/cover no-repeat;
-    animation:car-float 4s ease-in-out infinite;
-    filter:saturate(1.1) brightness(0.85);
+        url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1000&q=90&auto=format&fit=crop')
+        center center / cover no-repeat;
+    filter:saturate(1.2) brightness(0.75);
+    animation:float-l 5s ease-in-out infinite;
 }
 
-/* CARRO DIREITO */
-.carro-dir {
-    position:fixed;
-    right:0; bottom:0;
-    width:42vw;
-    height:65vh;
-    z-index:2;
-    background:
-        linear-gradient(to left, rgba(6,12,24,0) 60%, rgba(6,12,24,0.95) 100%),
-        linear-gradient(to top, rgba(6,12,24,0.3) 0%, rgba(6,12,24,0) 40%),
-        url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=900&q=90&auto=format&fit=crop') left center/cover no-repeat;
-    animation:car-float 4s ease-in-out infinite;
-    animation-delay:0.7s;
-    filter:saturate(1.1) brightness(0.85);
-    transform:scaleX(-1);
-}
-
-/* BRILHO DOS FARÓIS */
+/* GRADIENTE SOBRE O CARRO ESQUERDO */
 .carro-esq::after {
     content:'';
     position:absolute;
-    right:-20px; top:30%;
-    width:120px; height:80px;
-    background:radial-gradient(ellipse, rgba(255,220,100,0.25) 0%, transparent 70%);
-    animation:farol-glow 2.5s ease-in-out infinite;
+    inset:0;
+    background:
+        linear-gradient(to right, rgba(6,12,24,0.15) 0%, rgba(6,12,24,0.98) 100%),
+        linear-gradient(to bottom, rgba(6,12,24,0.6) 0%, rgba(6,12,24,0) 30%, rgba(6,12,24,0) 70%, rgba(6,12,24,0.5) 100%);
 }
+
+/* CARRO DIREITO — preenche metade direita */
+.carro-dir {
+    position:fixed;
+    right:0; top:0;
+    width:50vw; height:100vh;
+    z-index:1;
+    background:
+        url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1000&q=90&auto=format&fit=crop')
+        center center / cover no-repeat;
+    filter:saturate(1.2) brightness(0.75);
+    animation:float-r 5s ease-in-out infinite;
+    animation-delay:0.8s;
+}
+
+/* GRADIENTE SOBRE O CARRO DIREITO */
 .carro-dir::after {
     content:'';
     position:absolute;
-    left:-20px; top:30%;
-    width:120px; height:80px;
-    background:radial-gradient(ellipse, rgba(255,220,100,0.25) 0%, transparent 70%);
-    animation:farol-glow 2.5s ease-in-out infinite;
-    animation-delay:0.5s;
+    inset:0;
+    background:
+        linear-gradient(to left, rgba(6,12,24,0.15) 0%, rgba(6,12,24,0.98) 100%),
+        linear-gradient(to bottom, rgba(6,12,24,0.6) 0%, rgba(6,12,24,0) 30%, rgba(6,12,24,0) 70%, rgba(6,12,24,0.5) 100%);
 }
 
-@keyframes car-float {
-    0%,100% { transform:translateY(0); }
-    50%      { transform:translateY(-10px); }
+@keyframes float-l {
+    0%,100% { transform:scale(1) translateY(0); }
+    50%      { transform:scale(1.02) translateY(-8px); }
+}
+@keyframes float-r {
+    0%,100% { transform:scale(1) translateY(0); }
+    50%      { transform:scale(1.02) translateY(-8px); }
 }
 
-/* Corrigir espelhamento do carro direito com float */
-.carro-dir {
-    animation:car-float-dir 4s ease-in-out infinite;
-    animation-delay:0.7s;
-}
-@keyframes car-float-dir {
-    0%,100% { transform:scaleX(-1) translateY(0); }
-    50%      { transform:scaleX(-1) translateY(-10px); }
+/* FAIXA CENTRAL ESCURA */
+.centro {
+    position:fixed;
+    left:50%; top:0;
+    transform:translateX(-50%);
+    width:520px; height:100vh;
+    z-index:2;
+    background:linear-gradient(to right,
+        transparent 0%,
+        rgba(6,12,24,0.5) 20%,
+        rgba(6,12,24,0.7) 50%,
+        rgba(6,12,24,0.5) 80%,
+        transparent 100%);
+    pointer-events:none;
 }
 
-@keyframes farol-glow {
-    0%,100% { opacity:0.6; transform:scale(1); }
-    50%      { opacity:1; transform:scale(1.15); }
+/* BRILHO LARANJA CENTRAL */
+.glow-center {
+    position:fixed;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    width:600px; height:500px;
+    z-index:2;
+    background:radial-gradient(ellipse, rgba(255,100,0,0.06) 0%, transparent 65%);
+    pointer-events:none;
 }
 
 /* LINHA DO CHÃO */
 .ground {
     position:fixed;
     bottom:0; left:0; right:0;
-    height:3px;
-    z-index:3;
+    height:2px; z-index:5;
     background:linear-gradient(90deg,
         transparent 0%,
-        rgba(255,152,0,0.2) 15%,
-        rgba(255,152,0,0.6) 50%,
-        rgba(255,152,0,0.2) 85%,
+        rgba(255,152,0,0.15) 10%,
+        rgba(255,152,0,0.5) 50%,
+        rgba(255,152,0,0.15) 90%,
         transparent 100%);
-    box-shadow:0 0 20px rgba(255,152,0,0.3);
+    box-shadow:0 0 25px rgba(255,152,0,0.25);
 }
 
 /* PNEUS CANTOS */
-.pneu-canto { position:fixed; z-index:4; opacity:0.3; }
-.pneu-canto.tl { top:-50px; left:-50px; animation:rot 14s linear infinite; }
-.pneu-canto.tr { top:-50px; right:-50px; animation:rot-r 14s linear infinite; }
-.pneu-canto.bl { bottom:-50px; left:-50px; animation:rot-r 14s linear infinite; }
-.pneu-canto.br { bottom:-50px; right:-50px; animation:rot 14s linear infinite; }
+.pneu-canto { position:fixed; z-index:6; opacity:0.28; }
+.pneu-canto.tl { top:-50px; left:-50px; animation:rot 16s linear infinite; }
+.pneu-canto.tr { top:-50px; right:-50px; animation:rot-r 16s linear infinite; }
+.pneu-canto.bl { bottom:-50px; left:-50px; animation:rot-r 16s linear infinite; }
+.pneu-canto.br { bottom:-50px; right:-50px; animation:rot 16s linear infinite; }
 @keyframes rot   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 @keyframes rot-r { from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
 
 /* PARTÍCULAS */
-.particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:3; pointer-events:none; }
-.particle { position:absolute; width:2px; height:2px; background:#ff9800; border-radius:50%; opacity:0; animation:float 7s infinite; }
+.particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:4; pointer-events:none; }
+.particle { position:absolute; width:2px; height:2px; background:#ff9800; border-radius:50%; opacity:0; animation:float-p 7s infinite; }
 .particle:nth-child(1) { left:5%;  animation-delay:0s;   animation-duration:8s; }
 .particle:nth-child(2) { left:15%; animation-delay:1.2s; animation-duration:6s; }
 .particle:nth-child(3) { left:30%; animation-delay:2s;   animation-duration:9s; }
@@ -144,28 +135,28 @@ body {
 .particle:nth-child(6) { left:78%; animation-delay:3s;   animation-duration:8s; }
 .particle:nth-child(7) { left:90%; animation-delay:0.4s; animation-duration:7s; }
 .particle:nth-child(8) { left:42%; animation-delay:4s;   animation-duration:9s; }
-@keyframes float {
+@keyframes float-p {
     0%   { transform:translateY(100vh) scale(0); opacity:0; }
-    10%  { opacity:0.6; }
-    90%  { opacity:0.2; }
+    10%  { opacity:0.5; }
+    90%  { opacity:0.15; }
     100% { transform:translateY(-50px) scale(2); opacity:0; }
 }
 
 /* LOGIN BOX */
 .login-box {
     width:420px;
-    background:rgba(4,10,22,0.92);
-    border:1px solid rgba(255,152,0,0.35);
+    background:rgba(4,10,22,0.88);
+    border:1px solid rgba(255,152,0,0.3);
     border-radius:20px;
     padding:32px;
     text-align:center;
     box-shadow:
-        0 0 0 1px rgba(255,152,0,0.07),
-        0 30px 80px rgba(0,0,0,0.95),
-        0 0 100px rgba(255,100,0,0.08);
+        0 0 0 1px rgba(255,152,0,0.06),
+        0 30px 80px rgba(0,0,0,0.9),
+        0 0 80px rgba(255,100,0,0.07);
     position:relative;
     z-index:10;
-    backdrop-filter:blur(20px);
+    backdrop-filter:blur(22px);
 }
 .login-box::before {
     content:'';
@@ -204,13 +195,10 @@ button:active { transform:translateY(0); }
 </head>
 <body>
 
-<div class="bg"></div>
-<div class="vinheta"></div>
-
-<!-- CARROS REAIS -->
 <div class="carro-esq"></div>
 <div class="carro-dir"></div>
-
+<div class="centro"></div>
+<div class="glow-center"></div>
 <div class="ground"></div>
 
 <!-- PNEUS CANTOS -->
