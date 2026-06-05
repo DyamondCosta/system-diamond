@@ -44,7 +44,7 @@ function montarMenu() {
              style="width:115px;border-radius:12px;margin-bottom:10px;box-shadow:0 4px 15px rgba(0,0,0,0.4);">
         <h3 style="color:white;font-size:15px;margin:0 0 2px;">Batalhão dos Pneus</h3>
         <p style="font-size:10px;color:rgba(255,255,255,0.45);margin:0 0 4px;font-style:italic;">Sistema de Gestão</p>
-        <p style="font-size:11px;color:#ff9800;margin:0 0 15px;font-weight:600;letter-spacing:0.5px;">⚙️ LC Solutions</p>
+        <p style="font-size:11px;color:#ff9800;margin:0 0 15px;font-weight:600;letter-spacing:0.5px;">⚙️ PRUVENX ERP</p>
     </div>
 
     <div style="padding:8px 15px;margin-bottom:10px;background:rgba(255,255,255,0.08);border-radius:8px;">
