@@ -31,24 +31,19 @@ async function carregarDashboard() {
             .filter(item => item.tipo === 'SAIDA' && item.data_movimento >= primeiroDiaMes)
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
-        // ENTRADAS MANUAIS DE HOJE
-        // (entradas que NÃO vieram de venda — não contêm "Venda" na descrição)
+        // TODAS AS ENTRADAS DO CAIXA SÃO LUCRO
+        // (vendas de pneu e servico já entram pelo campo lucro da tabela vendas)
         const entradasManuaisHoje = (caixa || [])
             .filter(item =>
                 item.tipo === 'ENTRADA' &&
-                item.data_movimento === hojeStr &&
-                !(item.descricao || '').toLowerCase().includes('venda') &&
-                !(item.descricao || '').toLowerCase().includes('serviço')
+                item.data_movimento === hojeStr
             )
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
-        // ENTRADAS MANUAIS DO MÊS
         const entradasManuaisMes = (caixa || [])
             .filter(item =>
                 item.tipo === 'ENTRADA' &&
-                item.data_movimento >= primeiroDiaMes &&
-                !(item.descricao || '').toLowerCase().includes('venda') &&
-                !(item.descricao || '').toLowerCase().includes('serviço')
+                item.data_movimento >= primeiroDiaMes
             )
             .reduce((total, item) => total + Number(item.valor || 0), 0);
 
@@ -70,9 +65,9 @@ async function carregarDashboard() {
         const lucroVendasMes = (vendasMes || [])
             .reduce((total, v) => total + Number(v.lucro || 0), 0);
 
-        // LUCRO TOTAL = lucro vendas + entradas manuais - saídas
+        // LUCRO TOTAL = lucro vendas + entradas caixa - saidas caixa
         const lucroHoje = lucroVendasHoje + entradasManuaisHoje - saidasHoje;
-        const lucroMes = lucroVendasMes + entradasManuaisMes - saidasMes;
+        const lucroMes  = lucroVendasMes  + entradasManuaisMes  - saidasMes;
 
         // SERVIÇOS
         const { count: servicosTotal } = await clienteSupabase
@@ -109,17 +104,17 @@ async function carregarDashboard() {
             .order('hora_agendamento', { ascending: true });
 
         // ATUALIZA CARDS
-        document.getElementById('vendas-hoje').textContent = `R$ ${entradasHoje.toFixed(2)}`;
-        document.getElementById('saidas-hoje').textContent = `R$ ${saidasHoje.toFixed(2)}`;
-        document.getElementById('lucro-hoje').textContent = `R$ ${lucroHoje.toFixed(2)}`;
-        document.getElementById('saldo-hoje').textContent = `R$ ${saldoHoje.toFixed(2)}`;
-        document.getElementById('faturamento-mes').textContent = `R$ ${faturamentoMes.toFixed(2)}`;
-        document.getElementById('saidas-mes').textContent = `R$ ${saidasMes.toFixed(2)}`;
-        document.getElementById('lucro-mes').textContent = `R$ ${lucroMes.toFixed(2)}`;
-        document.getElementById('servicos-hoje').textContent = servicosTotal || 0;
-        document.getElementById('os-abertas').textContent = osAbertas || 0;
-        document.getElementById('estoque-baixo').textContent = estoqueBaixo || 0;
-        document.getElementById('total-pneus').textContent = totalPneus || 0;
+        document.getElementById('vendas-hoje').textContent    = `R$ ${entradasHoje.toFixed(2)}`;
+        document.getElementById('saidas-hoje').textContent    = `R$ ${saidasHoje.toFixed(2)}`;
+        document.getElementById('lucro-hoje').textContent     = `R$ ${lucroHoje.toFixed(2)}`;
+        document.getElementById('saldo-hoje').textContent     = `R$ ${saldoHoje.toFixed(2)}`;
+        document.getElementById('faturamento-mes').textContent= `R$ ${faturamentoMes.toFixed(2)}`;
+        document.getElementById('saidas-mes').textContent     = `R$ ${saidasMes.toFixed(2)}`;
+        document.getElementById('lucro-mes').textContent      = `R$ ${lucroMes.toFixed(2)}`;
+        document.getElementById('servicos-hoje').textContent  = servicosTotal || 0;
+        document.getElementById('os-abertas').textContent     = osAbertas || 0;
+        document.getElementById('estoque-baixo').textContent  = estoqueBaixo || 0;
+        document.getElementById('total-pneus').textContent    = totalPneus || 0;
         document.getElementById('agendamentos-hoje').textContent = (agendamentosHoje || []).length;
 
         // LISTA AGENDAMENTOS DO DIA
